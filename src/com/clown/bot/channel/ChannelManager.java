@@ -4,15 +4,8 @@ import java.util.ArrayList;
 
 import com.clown.bot.TwitchIRCBot;
 
-public final class ChannelManager {
-	
-	private ChannelManager() {
-		//To prevent instantiation.
-	}
-	
-	private static final ArrayList<Channel> currentChannels = new ArrayList<Channel>(1);
-	
-	private static final Thread CHANNEL_REFRESH_THREAD = new Thread() {
+public class ChannelManager {
+	private final Thread channelRefreshThread = new Thread() {
 		@Override
 		public void run() {
 			while (!TwitchIRCBot.killIssued()) {
@@ -26,20 +19,21 @@ public final class ChannelManager {
 			}
 		}
 	};
-	
-	static {
-		CHANNEL_REFRESH_THREAD.start();
+	public ChannelManager() {
+		channelRefreshThread.start();
 	}
 	
-	public static void forceRefresh() {
-		CHANNEL_REFRESH_THREAD.interrupt();
+	private final ArrayList<Channel> currentChannels = new ArrayList<Channel>(1);
+	
+	public void forceRefresh() {
+		channelRefreshThread.interrupt();
 	}
 	
-	public static ArrayList<Channel> getChannels() {
+	public ArrayList<Channel> getChannels() {
 		return currentChannels;
 	}
 	
-	public static boolean contains(String channel) {
+	public boolean contains(String channel) {
 		for (Channel c : currentChannels) {
 			if (c.getChannel().equalsIgnoreCase(channel)) {
 				return true;
@@ -48,7 +42,7 @@ public final class ChannelManager {
 		return false;
 	}
 	
-	public static boolean addChannel(String channel) {
+	public boolean addChannel(String channel) {
 		if (contains(channel)) {
 			System.out.println("Channel already exists in list.");
 			return false;

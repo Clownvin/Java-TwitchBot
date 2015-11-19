@@ -1,13 +1,9 @@
 package com.clown.bot;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 import com.clown.bot.channel.Channel;
-import com.clown.bot.channel.ChannelManager;
 import com.clown.bot.server.ServerConnection;
 
 public final class TwitchIRCBot {
@@ -32,6 +28,14 @@ public final class TwitchIRCBot {
 	
 	private static ServerConnection ircConnection;
 	private static ServerConnection groupConnection;
+	
+	public static ServerConnection getIRCConnection() {
+		return ircConnection;
+	}
+	
+	public static ServerConnection getGroupConnection() {
+		return groupConnection;
+	}
 
 	private static final Thread AUTO_MESSAGE_THREAD = new Thread() {
 		@Override
@@ -60,7 +64,11 @@ public final class TwitchIRCBot {
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		try {
 			ircConnection = new ServerConnection(TWITCH_IRC_IP, TWITCH_IRC_PORT);
-			//groupConnection = new ServerConnection(TWITCH_GROUP_IP, TWITCH_GROUP_PORT);
+			groupConnection = new ServerConnection(TWITCH_GROUP_IP, TWITCH_GROUP_PORT);
+			for (int i = 0; i < DEFAULT_CHANNELS.length; i++) {
+				ircConnection.joinChannel(DEFAULT_CHANNELS[i]);
+				groupConnection.joinChannel(DEFAULT_CHANNELS[i]);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -69,7 +77,7 @@ public final class TwitchIRCBot {
 
 			@Override
 			public void run() {
-				for (Channel channel : ChannelManager.getChannels()) {
+				for (Channel channel : ircConnection.getChannelManager().getChannels()) {
 					ircConnection.sendMessage(channel.getChannel(), "Cya later!");
 				}
 			}

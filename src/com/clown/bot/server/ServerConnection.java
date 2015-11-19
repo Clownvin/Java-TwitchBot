@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import com.clown.bot.TwitchIRCBot;
+import com.clown.bot.channel.ChannelManager;
 import com.clown.bot.messaging.IRCMessage;
 import com.clown.bot.messaging.MessageHandler;
 import com.clown.io.BasicIO;
@@ -17,6 +18,8 @@ public final class ServerConnection extends Thread {
 	private final Socket socket;
 	private final OutputStream output;
 	private final InputStream input;
+	
+	private final ChannelManager channelManager = new ChannelManager();
 	
 	public ServerConnection(final String ip, final int port) throws IOException {
 		this.ip = ip;
@@ -38,6 +41,14 @@ public final class ServerConnection extends Thread {
 		sendCommand("USER", String.format("%s %s bla :%s", TwitchIRCBot.DEFAULT_INDENTITY, ip, TwitchIRCBot.DEFAULT_REALNAME));
 	}
 	
+	public void joinChannel(String channel) {
+		if (channelManager.addChannel(channel)) {
+			sendCommand("JOIN", channel);
+		} else {
+			System.out.println("Channel already exists.");
+		}
+	}
+	
 	@Override
 	public void run() {
 		System.out.println("Server "+this+" running.");
@@ -45,7 +56,6 @@ public final class ServerConnection extends Thread {
 			String line = String.valueOf(BasicIO.readLine(input));
 			handleLine(line);
 		}
-		System.out.println("Exiting");
 	}
 	
 	public boolean sendMessage(String channel, String message) {
@@ -71,6 +81,10 @@ public final class ServerConnection extends Thread {
 			return;
 		}
 		System.out.println("["+this+"] "+line);
+	}
+	
+	public ChannelManager getChannelManager() {
+		return channelManager;
 	}
 	
 	public boolean sendCommand(String command, String message) {
