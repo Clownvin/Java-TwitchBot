@@ -2,6 +2,9 @@
 Thumbs.db
 ehthumbs.db
 
+# Twitch codez
+*.properties
+
 # Folder config file
 Desktop.ini
 

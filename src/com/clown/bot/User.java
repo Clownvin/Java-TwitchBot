@@ -1,13 +1,19 @@
 package com.clown.bot;
 
 public final class User {
-	private String username;
+	private final String username;
+	private final UserType type;
 	
-	public User(final String username) {
+	public User(final String username, UserType type) {
 		this.username = username;
+		this.type = type;
 	}
 	
 	public String getUsername() {
 		return username;
+	}
+	
+	public UserType getType() {
+		return type;
 	}
 }
