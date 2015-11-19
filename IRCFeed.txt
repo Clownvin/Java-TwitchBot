@@ -1,0 +1,26 @@
+:tmi.twitch.tv 001 elnighthawk :Welcome, GLHF!
+:tmi.twitch.tv 002 elnighthawk :Your host is tmi.twitch.tv
+:tmi.twitch.tv 003 elnighthawk :This server is rather new
+:tmi.twitch.tv 004 elnighthawk :-
+:tmi.twitch.tv 375 elnighthawk :-
+:tmi.twitch.tv 372 elnighthawk :You are in a maze of twisty passages, all alike.
+:tmi.twitch.tv 376 elnighthawk :>
+:elnighthawk!elnighthawk@elnighthawk.tmi.twitch.tv JOIN #vavbro
+:elnighthawk.tmi.twitch.tv 353 elnighthawk = #vavbro :elnighthawk
+:elnighthawk.tmi.twitch.tv 366 elnighthawk #vavbro :End of /NAMES list
+:elnighthawk!elnighthawk@elnighthawk.tmi.twitch.tv JOIN #ismailzd
+:elnighthawk.tmi.twitch.tv 353 elnighthawk = #ismailzd :elnighthawk
+:elnighthawk.tmi.twitch.tv 366 elnighthawk #ismailzd :End of /NAMES list
+:elnighthawk!elnighthawk@elnighthawk.tmi.twitch.tv JOIN #epicmice
+:elnighthawk.tmi.twitch.tv 353 elnighthawk = #epicmice :elnighthawk
+:elnighthawk.tmi.twitch.tv 366 elnighthawk #epicmice :End of /NAMES list
+:elnighthawk!elnighthawk@elnighthawk.tmi.twitch.tv JOIN #white_oak
+:elnighthawk.tmi.twitch.tv 353 elnighthawk = #white_oak :elnighthawk
+:elnighthawk.tmi.twitch.tv 366 elnighthawk #white_oak :End of /NAMES list
+:elnighthawk!elnighthawk@elnighthawk.tmi.twitch.tv JOIN #prefixaut
+:elnighthawk.tmi.twitch.tv 353 elnighthawk = #prefixaut :elnighthawk
+:elnighthawk.tmi.twitch.tv 366 elnighthawk #prefixaut :End of /NAMES list
+:elnighthawk!elnighthawk@elnighthawk.tmi.twitch.tv JOIN #silentdeadly96
+:elnighthawk.tmi.twitch.tv 353 elnighthawk = #silentdeadly96 :elnighthawk
+:elnighthawk.tmi.twitch.tv 366 elnighthawk #silentdeadly96 :End of /NAMES list
+:vavbro!vavbro@vavbro.tmi.twitch.tv PRIVMSG #vavbro :nighthawk die
