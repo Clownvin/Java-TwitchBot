@@ -1,4 +1,4 @@
-package com.clown.bot;
+package com.clown.bot.user;
 
 public final class User {
 	private final String username;

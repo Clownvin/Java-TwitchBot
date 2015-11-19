@@ -1,4 +1,4 @@
-package com.clown.bot;
+package com.clown.bot.user;
 
 public enum UserType {
 	MODERATOR, STAFF, ADMIN, GLOBAL_MOD, VIEWER;
