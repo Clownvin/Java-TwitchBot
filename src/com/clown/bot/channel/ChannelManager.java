@@ -13,26 +13,28 @@ public class ChannelManager {
 					channel.updateViewerList();
 				}
 				try {
-					Thread.sleep(60000);
+					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 				}
 			}
 		}
 	};
+
+	private final ArrayList<Channel> currentChannels = new ArrayList<Channel>(1);
+
 	public ChannelManager() {
 		channelRefreshThread.start();
 	}
-	
-	private final ArrayList<Channel> currentChannels = new ArrayList<Channel>(1);
-	
-	public void forceRefresh() {
-		channelRefreshThread.interrupt();
+
+	public boolean addChannel(String channel) {
+		if (contains(channel)) {
+			System.out.println("Channel already exists in list.");
+			return false;
+		}
+		currentChannels.add(new Channel(channel));
+		return true;
 	}
-	
-	public ArrayList<Channel> getChannels() {
-		return currentChannels;
-	}
-	
+
 	public boolean contains(String channel) {
 		for (Channel c : currentChannels) {
 			if (c.getChannel().equalsIgnoreCase(channel)) {
@@ -41,13 +43,21 @@ public class ChannelManager {
 		}
 		return false;
 	}
-	
-	public boolean addChannel(String channel) {
-		if (contains(channel)) {
-			System.out.println("Channel already exists in list.");
-			return false;
+
+	public void forceRefresh() {
+		channelRefreshThread.interrupt();
+	}
+
+	public Channel getChannel(String channel) {
+		for (Channel c : currentChannels) {
+			if (c.getChannel().equalsIgnoreCase(channel)) {
+				return c;
+			}
 		}
-		currentChannels.add(new Channel(channel));
-		return true;
+		return null;
+	}
+
+	public ArrayList<Channel> getChannels() {
+		return currentChannels;
 	}
 }

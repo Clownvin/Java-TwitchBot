@@ -2,7 +2,7 @@ package com.clown.bot.user;
 
 public enum UserType {
 	MODERATOR, STAFF, ADMIN, GLOBAL_MOD, VIEWER;
-	
+
 	public static UserType getTypeForState(int state) {
 		switch (state) {
 		case 1:

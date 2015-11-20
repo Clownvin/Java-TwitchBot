@@ -12,24 +12,24 @@ public final class Channel {
 	private final String channel;
 	private Color color;
 	private final ArrayList<User> viewerList = new ArrayList<User>();
-	
+
 	public Channel(final String channel) {
 		this.channel = channel;
 		this.color = new Color((int) (Math.random() * 0xFFFFFF));
 	}
-	
+
 	public String getChannel() {
 		return channel;
 	}
-	
+
 	public Color getColor() {
 		return color;
 	}
-	
+
 	public ArrayList<User> getViewerList() {
 		return viewerList;
 	}
-	
+
 	public void updateViewerList() {
 		String jsonPage = null;
 		try {
@@ -39,7 +39,15 @@ public final class Channel {
 		}
 		if (jsonPage != null) {
 			viewerList.clear();
-			String[] lines = jsonPage.replace("\r", "").split("\n"); // \r is there just incase carriage return char exists @ eol
+			String[] lines = jsonPage.replace("\r", "").split("\n"); // \r is
+																		// there
+																		// just
+																		// incase
+																		// carriage
+																		// return
+																		// char
+																		// exists
+																		// @ eol
 			int state = 0; // MODS: 1, STAFF: 2, ADMINS: 3, GMODS: 4, VIEWERS: 5
 			for (int i = 0; i < lines.length; i++) {
 				lines[i] = lines[i].trim();
@@ -73,7 +81,8 @@ public final class Channel {
 				case 3:
 				case 4:
 				case 5:
-					viewerList.add(new User(lines[i].trim().replace("\"", "").replace(",", ""), UserType.getTypeForState(state)));
+					viewerList.add(new User(lines[i].trim().replace("\"", "").replace(",", ""),
+							UserType.getTypeForState(state)));
 					break;
 				}
 			}

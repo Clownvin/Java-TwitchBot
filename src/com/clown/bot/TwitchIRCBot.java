@@ -17,25 +17,19 @@ public final class TwitchIRCBot {
 	public static final String DEFAULT_NICKNAME = "ElNighthawk";
 	public static final String DEFAULT_INDENTITY = "ElNighthawk";
 	public static final String DEFAULT_REALNAME = "ElNighthawk";
-	public static final String[] DEFAULT_CHANNELS = { "#vavbro", "#ismailzd", "#epicmice", "#white_oak", "#prefixaut",
-			"#silentdeadly96" };
+	public static final String[] DEFAULT_CHANNELS = { "#vavbro" };
 	public static final String DEFAULT_OAUTH = Messages.getString("TwitchIRCBot.5");
 
 	private static final String[] AUTO_MESSAGES = new String[] { "Have any questions? I can try and answer them.",
 			"Have a question? Want to know more? Don't be 'fraid to ask.",
-			"Want to know more about what he's doing? Just ask.", "Want to recommend a song? Just type it in chat." };
+			"Want to know more about what he's doing? Just ask.", "Want to recommend a song? Just type it in chat.",
+			"You can do !commands to get a list of commands.", "Use !commands to get a list of commands you can use.",
+			"Did you know: In this channel, you can play games with other users? !commands for details on how.",
+			"You can play games with the other users! !commands to learn how." };
 	private static final long AUTO_MESSAGE_DELAY = 300000;
-	
+
 	private static ServerConnection ircConnection;
 	private static ServerConnection groupConnection;
-	
-	public static ServerConnection getIRCConnection() {
-		return ircConnection;
-	}
-	
-	public static ServerConnection getGroupConnection() {
-		return groupConnection;
-	}
 
 	private static final Thread AUTO_MESSAGE_THREAD = new Thread() {
 		@Override
@@ -45,20 +39,32 @@ public final class TwitchIRCBot {
 					Thread.sleep(AUTO_MESSAGE_DELAY);
 				} catch (InterruptedException e) {
 				}
-				ircConnection.sendMessage(DEFAULT_CHANNELS[0], AUTO_MESSAGES[(int) (Math.random() * AUTO_MESSAGES.length)]);
+				ircConnection.sendMessage(DEFAULT_CHANNELS[0],
+						AUTO_MESSAGES[(int) (Math.random() * AUTO_MESSAGES.length)]);
 			}
 		}
 	};
-	
+
 	static {
 		AUTO_MESSAGE_THREAD.start();
 	}
 
-	//TODO Gone
 	private static boolean killIssued = false;
+
+	public static ServerConnection getGroupConnection() {
+		return groupConnection;
+	}
+
+	public static ServerConnection getIRCConnection() {
+		return ircConnection;
+	}
 
 	public static void issueKill() {
 		killIssued = true;
+	}
+
+	public static boolean killIssued() {
+		return killIssued;
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
@@ -69,6 +75,7 @@ public final class TwitchIRCBot {
 				ircConnection.joinChannel(DEFAULT_CHANNELS[i]);
 				groupConnection.joinChannel(DEFAULT_CHANNELS[i]);
 			}
+			groupConnection.sendCommand("CAP REQ", ":twitch.tv/commands");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -83,9 +90,5 @@ public final class TwitchIRCBot {
 			}
 
 		}));
-	}
-	
-	public static boolean killIssued() {
-		return killIssued;
 	}
 }

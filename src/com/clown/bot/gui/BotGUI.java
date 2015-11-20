@@ -10,8 +10,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
-import com.clown.bot.channel.Channel;
-import com.clown.bot.messaging.IRCMessage;
+import com.clown.bot.messaging.Message;
 
 public final class BotGUI extends JFrame {
 
@@ -19,12 +18,12 @@ public final class BotGUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 4983554815226772948L;
-	
+
 	private static final BufferedImage bufferImage = new BufferedImage(
 			(int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()),
 			(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(), BufferedImage.TYPE_INT_RGB);
 	private static final Graphics bufferGraphics = bufferImage.getGraphics();
-	
+
 	public BotGUI() {
 		this.setSize((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2),
 				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
@@ -34,8 +33,9 @@ public final class BotGUI extends JFrame {
 			public void keyReleased(KeyEvent e) {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_ESCAPE:
-//					for (Channel channel : currentChannels)
-//						sendMessage(channel.getChannel(), "Looks like my time is up! :(");
+					// for (Channel channel : currentChannels)
+					// sendMessage(channel.getChannel(), "Looks like my time is
+					// up! :(");
 					System.exit(0);
 					break;
 				}
@@ -51,19 +51,21 @@ public final class BotGUI extends JFrame {
 		int fontHeight = bufferGraphics.getFontMetrics().getHeight();
 		FontMetrics metrics = bufferGraphics.getFontMetrics();
 		int stringCount = this.getHeight() / fontHeight;
-		int idx = 1;//messages.size() - 1; yea.... this needs work lol.
-		IRCMessage message = null;
-//		for (int i = stringCount; i > -1 && idx > -1; i--, idx--) {
-//			int y = i * fontHeight;
-//			message = messages.get(idx);
-//			bufferGraphics.setColor(Color.BLACK);
-//			bufferGraphics.drawString("[", 10, y);
-//			bufferGraphics.setColor(channelColors.get(indexOfChannel(message.channel)));
-//			bufferGraphics.drawString(message.channel, 10 + metrics.stringWidth("["), y);
-//			bufferGraphics.setColor(Color.BLACK);
-//			bufferGraphics.drawString("] " + message.user + ": " + message.message,
-//					10 + metrics.stringWidth("[" + message.channel), y);
-//		}
+		int idx = 1;// messages.size() - 1; yea.... this needs work lol.
+		Message message = null;
+		// for (int i = stringCount; i > -1 && idx > -1; i--, idx--) {
+		// int y = i * fontHeight;
+		// message = messages.get(idx);
+		// bufferGraphics.setColor(Color.BLACK);
+		// bufferGraphics.drawString("[", 10, y);
+		// bufferGraphics.setColor(channelColors.get(indexOfChannel(message.channel)));
+		// bufferGraphics.drawString(message.channel, 10 +
+		// metrics.stringWidth("["), y);
+		// bufferGraphics.setColor(Color.BLACK);
+		// bufferGraphics.drawString("] " + message.user + ": " +
+		// message.message,
+		// 10 + metrics.stringWidth("[" + message.channel), y);
+		// }
 		g.drawImage(bufferImage, 0, 0, null);
 	}
 }
