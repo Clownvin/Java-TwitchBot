@@ -2,11 +2,16 @@ package com.clown.bot.regex;
 
 import java.util.regex.Pattern;
 
-import com.clown.bot.TwitchIRCBot;
+import com.clown.bot.TwitchBot;
 import com.clown.bot.messaging.Message;
 import com.clown.bot.server.ServerConnection;
 import com.clown.bot.user.User;
 
+/**
+ * 
+ * @author Calvin
+ *	Non-instantiable type that handles regex.
+ */
 public final class BotRegex {
 	private static boolean regexOff = false;
 	private static final Pattern CONST_USER_PATTERN = Pattern.compile("(.*)?(((el)?night(hawke?))|(vav(bro)?))(.*)?",
@@ -79,15 +84,24 @@ public final class BotRegex {
 		}
 	}
 
+	/**
+	 * Allows access to the array of string affirmatives.
+	 * @return array of affirmatives.
+	 */
 	public static String[] getAffirmatives() {
 		return AFFIRMATIVES;
 	}
 
 	// TODO Nighthawk do you love me
+	/**
+	 * Handles the message by matching it to regex patterns, and sending responses.
+	 * @param source source of the message.
+	 * @param message the message to match.
+	 */
 	public static void handleRegex(ServerConnection source, Message message) {
 		if (!regexOff) {
 			for (int i = 0; i < PATTERNS.length; i++) {
-				if (MY_CHANNEL_ONLY[i] && !message.channel.equalsIgnoreCase(TwitchIRCBot.DEFAULT_CHANNELS[0])) {
+				if (MY_CHANNEL_ONLY[i] && !message.channel.equalsIgnoreCase(TwitchBot.DEFAULT_CHANNELS[0])) {
 					System.out.println("breaking.");
 					break;
 				}
@@ -110,6 +124,10 @@ public final class BotRegex {
 		}
 	}
 
+	/**
+	 * Prevents regex from being used.
+	 * @param state the state to set the variable to.
+	 */
 	public static void setRegexOff(boolean state) {
 		regexOff = state;
 	}

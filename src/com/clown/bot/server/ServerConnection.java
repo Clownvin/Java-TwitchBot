@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import com.clown.bot.TwitchIRCBot;
+import com.clown.bot.TwitchBot;
 import com.clown.bot.channel.ChannelManager;
 import com.clown.bot.messaging.Message;
 import com.clown.bot.messaging.MessageHandler;
@@ -14,6 +14,12 @@ import com.clown.bot.user.User;
 import com.clown.io.BasicIO;
 import com.clown.util.Util;
 
+/**
+ * 
+ * @author Calvin
+ *
+ *	This class is the true "main" object. Everything revolves around this object, and all input and output flows through an instance of this object.
+ */
 public final class ServerConnection extends Thread {
 	private final String ip;
 	private final int port;
@@ -27,12 +33,15 @@ public final class ServerConnection extends Thread {
 
 	private volatile ArrayList<String> messages = new ArrayList<String>();
 
+	/**
+	 * This throttles the output of whisper messages, so that the bot doesn't get notifications about being too fast.
+	 */
 	private final Thread whisperThrottler = new Thread() {
 		@Override
 		public void run() {
-			while (!TwitchIRCBot.killIssued()) {
+			while (!TwitchBot.killIssued()) {
 				try {
-					Thread.sleep(400);
+					Thread.sleep(400); // Sleep for 400MS before sending the next message. 
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -45,12 +54,18 @@ public final class ServerConnection extends Thread {
 					synchronized (messages) {
 						message = messages.remove(0);
 					}
-					sendMessage(TwitchIRCBot.DEFAULT_CHANNELS[0], "/w " + user + " " + message);
+					sendMessage(TwitchBot.DEFAULT_CHANNELS[0], "/w " + user + " " + message);
 				}
 			}
 		}
 	};
 
+	/**
+	 * Constructor for a new instance of server connection.
+	 * @param ip IP of the server to connect to.
+	 * @param port port of the server to connect to.
+	 * @throws IOException if an IOException is thrown while creating socket, output, or input, throw it to the caller since this object is basically useless then.
+	 */
 	public ServerConnection(final String ip, final int port) throws IOException {
 		this.ip = ip;
 		this.port = port;
@@ -66,17 +81,30 @@ public final class ServerConnection extends Thread {
 		start();
 	}
 
+	/**
+	 * Basically just logs into the server using the bot's login info.
+	 */
 	private void establishConnection() {
-		sendCommand("PASS", TwitchIRCBot.DEFAULT_OAUTH);
-		sendCommand("NICK", TwitchIRCBot.DEFAULT_NICKNAME);
+		sendCommand("PASS", TwitchBot.DEFAULT_OAUTH);
+		sendCommand("NICK", TwitchBot.DEFAULT_NICKNAME);
 		sendCommand("USER",
-				String.format("%s %s bla :%s", TwitchIRCBot.DEFAULT_INDENTITY, ip, TwitchIRCBot.DEFAULT_REALNAME));
+				String.format("%s %s bla :%s", TwitchBot.DEFAULT_INDENTITY, ip, TwitchBot.DEFAULT_REALNAME));
 	}
 
+	/**
+	 * Allows other objects to get the channel manager.
+	 * @return the current channelManager object.
+	 */
 	public ChannelManager getChannelManager() {
 		return channelManager;
 	}
 
+	/**
+	 * Allows other objects to obtain the <code>User</code> object for a certain user.
+	 * @param channel channel of the user.
+	 * @param username username of the user.
+	 * @return the User object for that user, if one exists. Otherwise null.
+	 */
 	public User getUser(String channel, String username) {
 		for (User user : channelManager.getChannel(channel).getViewerList()) {
 			if (user.getUsername().equalsIgnoreCase(username)) {
@@ -86,6 +114,10 @@ public final class ServerConnection extends Thread {
 		return null;
 	}
 
+	/**
+	 * First step in interpreting input from the input stream. Directs the message to where it needs to go based on its command.
+	 * @param line line of input to process.
+	 */
 	private void handleLine(String line) {
 		if (line.contains("PING :")) {
 			System.out.println("Sending pong response.");
@@ -103,6 +135,10 @@ public final class ServerConnection extends Thread {
 		System.out.println("[" + this + "] " + line);
 	}
 
+	/**
+	 * Sends a JOIN command for the channel requested. Upon joining, input and output between this channel will be possible.
+	 * @param channel the channel to join.
+	 */
 	public void joinChannel(String channel) {
 		if (channelManager.addChannel(channel)) {
 			sendCommand("JOIN", channel);
@@ -111,14 +147,24 @@ public final class ServerConnection extends Thread {
 		}
 	}
 
+	/**
+	 * Overridden run method. Each step of the while-loop, a single line is read from the input stream, and <code>handleLine</code> is called.
+	 */
 	@Override
 	public void run() {
 		System.out.println("Server " + this + " running.");
-		while (!TwitchIRCBot.killIssued()) {
+		while (!TwitchBot.killIssued()) {
 			String line = String.valueOf(BasicIO.readLine(input));
 			handleLine(line);
 		}
 	}
+	
+	/**
+	 * Sends a command with the message provided through the output stream.
+	 * @param command command to send.
+	 * @param message message to send.
+	 * @return true if everything goes smoothly, false if else.
+	 */
 	public boolean sendCommand(String command, String message) {
 		try {
 			output.write(Util.toBytes(command + " " + message + "\r\n"));
@@ -129,9 +175,16 @@ public final class ServerConnection extends Thread {
 		return true;
 	}
 
+	/**
+	 * Sends a message to a channel. Converts the String to bytes and sends them through the output stream.
+	 * @param channel the channel to send the message on.
+	 * @param message the message to send.
+	 * @return true if everything goes well, false if else.
+	 */
 	public synchronized boolean sendMessage(String channel, String message) {
 		System.out.println("Sending message: " + message + " to : " + channel);
 		try {
+			//Write the message to the output stream.
 			output.write(Util.toBytes("PRIVMSG " + channel + " :" + message + "\r\n"));
 			output.flush();
 		} catch (IOException e) {
@@ -141,12 +194,21 @@ public final class ServerConnection extends Thread {
 		return true;
 	}
 
+	/**
+	 * Sends a whisper to a user. Adds the user and message to two array lists, and the whisperThrottler thread handles the actual sending of the messages, since they need to be throttled.
+	 * @param user user to send the whisper to.
+	 * @param message message to send.
+	 * @return true always (used to have the possibility to send false, but because it no longer handles the actual sending, it can't know if there was an issue)
+	 */
 	public synchronized boolean sendWhisper(String user, String message) {
 		users.add(user);
 		messages.add(message);
 		return true;
 	}
 
+	/**
+	 * Overriden toString method.
+	 */
 	@Override
 	public String toString() {
 		return ip + ":" + port;

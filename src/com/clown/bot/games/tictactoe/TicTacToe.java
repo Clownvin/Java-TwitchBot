@@ -1,6 +1,8 @@
-package com.clown.bot.games;
+package com.clown.bot.games.tictactoe;
 
-import com.clown.bot.TwitchIRCBot;
+import com.clown.bot.TwitchBot;
+import com.clown.bot.games.Game;
+import com.clown.bot.games.GameSession;
 
 public class TicTacToe extends Game {
 	private static final long EXPIRE_TIME = 180000; // 3 minutes.
@@ -18,13 +20,13 @@ public class TicTacToe extends Game {
 	public TicTacToe(GameSession session) {
 		super(session);
 		this.currentPlayer = Math.random() >= .5 ? session.getPlayer1() : session.getPlayer2();
-		TwitchIRCBot.getGroupConnection().sendWhisper(currentPlayer, "You are player one. Make your move.");
+		TwitchBot.getGroupConnection().sendWhisper(currentPlayer, "You are player one. Make your move.");
 		sendBoard(currentPlayer);
 		if (currentPlayer.equalsIgnoreCase(session.getPlayer1())) {
-			TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 					"You are player two. Other player will move first.");
 		} else {
-			TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 					"You are player two. Other player will move first.");
 		}
 		resetExpireTime();
@@ -44,17 +46,17 @@ public class TicTacToe extends Game {
 	@Override
 	public boolean gameOver() {
 		if (System.currentTimeMillis() > expireTime) {
-			TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 					"Your tic-tac-toe session has expired.");
-			TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 					"Your tic-tac-toe session has expired.");
-			TwitchIRCBot.getGroupConnection().sendWhisper(currentPlayer,
+			TwitchBot.getGroupConnection().sendWhisper(currentPlayer,
 					"You have lost karma for abandoning your tic-tac-toe game.");
 			if (currentPlayer.equals(session.getPlayer1())) {
-				TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+				TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 						"You have won the match by forfeit.");
 			} else {
-				TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+				TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 						"You have won the match by forfeit.");
 			}
 			return true;
@@ -85,45 +87,45 @@ public class TicTacToe extends Game {
 								} else {
 									currentPlayer = session.getPlayer1();
 								}
-								TwitchIRCBot.getGroupConnection().sendWhisper(user,
+								TwitchBot.getGroupConnection().sendWhisper(user,
 										"Your turn is now over. Please wait for the other player.");
 								sendBoard(currentPlayer);
 							} else {
 								if (hasWon(piece)) { // Winner!
-									TwitchIRCBot.getGroupConnection().sendWhisper(currentPlayer, "You won!");
+									TwitchBot.getGroupConnection().sendWhisper(currentPlayer, "You won!");
 									if (currentPlayer.equals(session.getPlayer1())) {
-										TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+										TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 												"Aww, you lost. :(");
 									} else {
-										TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+										TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 												"Aww, you lost. :(");
 									}
 								} else { // Only other case is that board is
 											// full.
 									// TODO Make karma real and save it.
-									TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 											"Game ended in a draw. You've both gained karma. :3");
-									TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 											"Game ended in a draw. You've both gained karma. :3");
 								}
 								gameOver = true;
 							}
 						} else {
-							TwitchIRCBot.getGroupConnection().sendWhisper(user, "That tile already has a piece in it!");
+							TwitchBot.getGroupConnection().sendWhisper(user, "That tile already has a piece in it!");
 						}
 					} else {
-						TwitchIRCBot.getGroupConnection().sendWhisper(user,
+						TwitchBot.getGroupConnection().sendWhisper(user,
 								"Please use a number in the range of 1-9 only.");
 					}
 				} catch (NumberFormatException e) {
-					TwitchIRCBot.getGroupConnection().sendWhisper(user,
+					TwitchBot.getGroupConnection().sendWhisper(user,
 							"Please use a number in the range of 1-9 only. And they have to numbers DansGame.");
 				}
 			} else {
-				TwitchIRCBot.getGroupConnection().sendWhisper(user, "You must use the command \"!move value\".");
+				TwitchBot.getGroupConnection().sendWhisper(user, "You must use the command \"!move value\".");
 			}
 		} else {
-			TwitchIRCBot.getGroupConnection().sendWhisper(user, "It's not your turn yet.");
+			TwitchBot.getGroupConnection().sendWhisper(user, "It's not your turn yet.");
 		}
 	}
 
@@ -151,11 +153,11 @@ public class TicTacToe extends Game {
 	}
 
 	private void sendBoard(String user) {
-		TwitchIRCBot.getGroupConnection().sendWhisper(user,
+		TwitchBot.getGroupConnection().sendWhisper(user,
 				"|" + gameBoard[0][0] + "|" + gameBoard[0][1] + "|" + gameBoard[0][2] + "|");
-		TwitchIRCBot.getGroupConnection().sendWhisper(user,
+		TwitchBot.getGroupConnection().sendWhisper(user,
 				"|" + gameBoard[1][0] + "|" + gameBoard[1][1] + "|" + gameBoard[1][2] + "|");
-		TwitchIRCBot.getGroupConnection().sendWhisper(user,
+		TwitchBot.getGroupConnection().sendWhisper(user,
 				"|" + gameBoard[2][0] + "|" + gameBoard[2][1] + "|" + gameBoard[2][2] + "|");
 	}
 

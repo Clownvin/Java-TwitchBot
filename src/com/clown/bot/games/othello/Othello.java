@@ -2,7 +2,7 @@ package com.clown.bot.games.othello;
 
 import java.util.ArrayList;
 
-import com.clown.bot.TwitchIRCBot;
+import com.clown.bot.TwitchBot;
 import com.clown.bot.games.Game;
 import com.clown.bot.games.GameSession;
 
@@ -25,13 +25,13 @@ public final class Othello extends Game {
 				+ Integer.toHexString((byte) WHITE_CHAR));
 		gameBoard.reset();
 		this.currentPlayer = Math.random() >= .5 ? session.getPlayer1() : session.getPlayer2();
-		TwitchIRCBot.getGroupConnection().sendWhisper(currentPlayer, "You are player one. Make your move.");
+		TwitchBot.getGroupConnection().sendWhisper(currentPlayer, "You are player one. Make your move.");
 		sendBoard(currentPlayer);
 		if (currentPlayer.equalsIgnoreCase(session.getPlayer1())) {
-			TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 					"You are player two. Other player will move first.");
 		} else {
-			TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 					"You are player two. Other player will move first.");
 		}
 		resetExpireTime();
@@ -40,17 +40,17 @@ public final class Othello extends Game {
 	@Override
 	public boolean gameOver() {
 		if (System.currentTimeMillis() > expireTime) {
-			TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 					"Your tic-tac-toe session has expired.");
-			TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 					"Your tic-tac-toe session has expired.");
-			TwitchIRCBot.getGroupConnection().sendWhisper(currentPlayer,
+			TwitchBot.getGroupConnection().sendWhisper(currentPlayer,
 					"You have lost karma for abandoning your tic-tac-toe game.");
 			if (currentPlayer.equals(session.getPlayer1())) {
-				TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+				TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 						"You have won the match by forfeit.");
 			} else {
-				TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+				TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 						"You have won the match by forfeit.");
 			}
 			return true;
@@ -82,23 +82,23 @@ public final class Othello extends Game {
 								} else {
 									currentPlayer = session.getPlayer1();
 								}
-								TwitchIRCBot.getGroupConnection().sendWhisper(user,
+								TwitchBot.getGroupConnection().sendWhisper(user,
 										"Your turn is now over. Please wait for the other player.");
 								sendBoard(currentPlayer);
 							} else {
 								if (currentPlayer.equals(session.getPlayer1())) {
 									sendBoard(session.getPlayer2());
-									TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 											"It seems you don't have any moves, so the other player will go again.");
 									sendBoard(session.getPlayer1());
-									TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 											"The other player has no moves, so you may move again.");
 								} else {
 									sendBoard(session.getPlayer1());
-									TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 											"It seems you don't have any moves, so the other player will go again.");
 									sendBoard(session.getPlayer2());
-									TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 											"The other player has no moves, so you may move again.");
 								}
 							}
@@ -106,37 +106,37 @@ public final class Othello extends Game {
 							sendBoard(session.getPlayer1());
 							sendBoard(session.getPlayer2());
 							if (hasWon(currentByte)) { // Winner!
-								TwitchIRCBot.getGroupConnection().sendWhisper(currentPlayer, "You won!");
+								TwitchBot.getGroupConnection().sendWhisper(currentPlayer, "You won!");
 								if (currentPlayer.equals(session.getPlayer1())) {
-									TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 											"Aww, you lost. :(");
 								} else {
-									TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 											"Aww, you lost. :(");
 								}
 							} else { // Only other case is that board is
 										// full.
 								// TODO Make karma real and save it.
-								TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer1(),
+								TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
 										"Game ended in a draw. You've both gained karma. :3");
-								TwitchIRCBot.getGroupConnection().sendWhisper(session.getPlayer2(),
+								TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
 										"Game ended in a draw. You've both gained karma. :3");
 							}
 							gameOver = true;
 						}
 					} else {
-						TwitchIRCBot.getGroupConnection().sendWhisper(user,
+						TwitchBot.getGroupConnection().sendWhisper(user,
 								"Please use a number in the range of 1-" + availableMoves.size() + " only.");
 					}
 				} catch (NumberFormatException e) {
-					TwitchIRCBot.getGroupConnection().sendWhisper(user, "Please use a number in the range of 1-"
+					TwitchBot.getGroupConnection().sendWhisper(user, "Please use a number in the range of 1-"
 							+ availableMoves.size() + " only. And they have to numbers DansGame.");
 				}
 			} else {
-				TwitchIRCBot.getGroupConnection().sendWhisper(user, "You must use the command \"!move value\".");
+				TwitchBot.getGroupConnection().sendWhisper(user, "You must use the command \"!move value\".");
 			}
 		} else {
-			TwitchIRCBot.getGroupConnection().sendWhisper(user, "It's not your turn yet.");
+			TwitchBot.getGroupConnection().sendWhisper(user, "It's not your turn yet.");
 		}
 
 	}
@@ -177,7 +177,7 @@ public final class Othello extends Game {
 				line += (gameBoard.get(x, y) == 1 ? "" + BLACK_CHAR + BLACK_CHAR
 						: gameBoard.get(x, y) == 0 ? "__" : "" + WHITE_CHAR + WHITE_CHAR) + "|";
 			}
-			TwitchIRCBot.getGroupConnection().sendWhisper(user, line);
+			TwitchBot.getGroupConnection().sendWhisper(user, line);
 		}
 	}
 

@@ -12,6 +12,11 @@ import javax.swing.JFrame;
 
 import com.clown.bot.messaging.Message;
 
+/**
+ * 
+ * @author Calvin
+ *	This object is basically not used right now at all. It WAS a basic GUI showing the chats from the various channes
+ */
 public final class BotGUI extends JFrame {
 
 	/**
