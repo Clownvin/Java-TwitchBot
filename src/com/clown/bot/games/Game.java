@@ -1,5 +1,7 @@
 package com.clown.bot.games;
 
+import com.clown.bot.user.User;
+
 /**
  * 
  * @author Calvin
@@ -7,6 +9,8 @@ package com.clown.bot.games;
  */
 public abstract class Game {
 	protected final GameSession session;
+	protected User currentPlayer;
+	protected boolean gameOver = false;
 	
 	/**
 	 * Constructor for a new game
@@ -28,4 +32,10 @@ public abstract class Game {
 	 * @param message message containing input.
 	 */
 	public abstract void handleInput(String user, String message);
+	
+	/**
+	 * Sends the board to the user.
+	 * @param user user to send the board to.
+	 */
+	protected abstract void sendBoard(String user);
 }

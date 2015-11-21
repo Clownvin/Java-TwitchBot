@@ -59,10 +59,10 @@ public final class Channel {
 		try {
 			jsonPage = BasicIO.readUrl(TwitchBot.TWITCH_GROUP_URL + channel.replace("#", "") + "/chatters");
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Exception reading channel userlist.");
 		}
 		if (jsonPage != null) {
-			viewerList.clear();
+			ArrayList<User> parsedUsers = new ArrayList<User>();
 			String[] lines = jsonPage.replace("\r", "").split("\n");
 			int state = 0; // MODS: 1, STAFF: 2, ADMINS: 3, GMODS: 4, VIEWERS: 5
 			for (int i = 0; i < lines.length; i++) {
@@ -97,9 +97,24 @@ public final class Channel {
 				case 3:
 				case 4:
 				case 5:
-					viewerList.add(new User(lines[i].trim().replace("\"", "").replace(",", ""),
+					parsedUsers.add(new User(lines[i].trim().replace("\"", "").replace(",", ""),
 							UserType.getTypeForState(state)));
 					break;
+				}
+			}
+			for (int i = 0; i < parsedUsers.size(); i++) {
+				if (!viewerList.contains(parsedUsers.get(i))) {
+					parsedUsers.get(i).loadUserData();
+					//System.out.println("User joined ["+channel+"]: "+parsedUsers.get(i).getUsername());
+					viewerList.add(parsedUsers.get(i));
+					continue;
+				}
+			}
+			for (int i = 0; i < viewerList.size(); i++) {
+				if (!parsedUsers.contains(viewerList.get(i))) {
+					viewerList.get(i).save();
+					//System.out.println("User left ["+channel+"]: "+viewerList.get(i).getUsername());
+					viewerList.remove(i);
 				}
 			}
 		}

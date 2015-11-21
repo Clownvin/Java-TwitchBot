@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 import com.clown.bot.channel.Channel;
 import com.clown.bot.server.ServerConnection;
+import com.clown.bot.user.User;
 
 /**
  * 
@@ -38,6 +39,7 @@ public final class TwitchBot {
 
 	/**
 	 * Sends a message from the AUTO_MESSAGE list every 5 minutes.
+	 * Also adds clown points to currently logged in users.
 	 */
 	private static final Thread AUTO_MESSAGE_THREAD = new Thread() {
 		@Override
@@ -45,6 +47,9 @@ public final class TwitchBot {
 			while (!killIssued) {
 				try {
 					Thread.sleep(AUTO_MESSAGE_DELAY);
+					for (User user : ircConnection.getChannelManager().getChannel(DEFAULT_CHANNELS[0]).getViewerList()) {
+						user.getUserData().addPoints(1);
+					}
 				} catch (InterruptedException e) {
 				}
 				ircConnection.sendMessage(DEFAULT_CHANNELS[0],

@@ -1,5 +1,7 @@
 package com.clown.bot.user;
 
+import com.clown.bot.TwitchBot;
+
 /**
  * 
  * @author Calvin
@@ -10,6 +12,7 @@ public final class User {
 	private final UserType type;
 	private long requestDelay;
 	private long commandDelay;
+	private UserData userData = null;
 
 	/**
 	 * Constructor for a new instance.
@@ -22,6 +25,8 @@ public final class User {
 		this.requestDelay = System.currentTimeMillis();
 		this.commandDelay = System.currentTimeMillis();
 	}
+	
+	/*
 	
 	/**
 	 * Checks whether or not the command delay has passed.
@@ -69,5 +74,44 @@ public final class User {
 	 */
 	public void setRequestDelay(long delay) {
 		this.requestDelay = System.currentTimeMillis() + delay;
+	}
+	
+	/**
+	 * Allows access to the UserData for this user
+	 * @return the current UserData for this user.
+	 */
+	public UserData getUserData() {
+		return userData;
+	}
+	
+	/**
+	 * Loads the UserData.
+	 */
+	public void loadUserData() {
+		this.userData = UserData.loadUserData(username);
+	}
+	
+	/**
+	 * Saves the data for this user.
+	 */
+	public void save() {
+		userData.saveData();
+	}
+	
+	/**
+	 * Sends whisper to user.
+	 * @param message the contents of the whisper
+	 */
+	public void sendWhisper(String message) {
+		TwitchBot.getGroupConnection().sendWhisper(username, message);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof User) {
+			return ((User)other).getUsername().equals(username);
+		} else {
+			return false;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.clown.bot.messaging;
+package com.clown.bot.messaging.requests;
 
 import com.clown.bot.TwitchBot;
 import com.clown.io.Action;
@@ -12,7 +12,7 @@ public final class Request {
 	private final String from;
 	private final String to;
 	private final Action action;
-	private long timeout = System.currentTimeMillis() + MessageHandler.REQUEST_TIMEOUT;
+	private long timeout = System.currentTimeMillis() + RequestHandler.REQUEST_TIMEOUT;
 
 	/**
 	 * Constructor for a new request instance.
@@ -34,7 +34,7 @@ public final class Request {
 		TwitchBot.getGroupConnection().sendWhisper(to, "Request accepted.");
 		action.perform();
 		timeout = 0;
-		MessageHandler.forceRequestCull();
+		RequestHandler.forceRequestCull();
 	}
 
 	/**
@@ -44,7 +44,7 @@ public final class Request {
 		TwitchBot.getGroupConnection().sendWhisper(from, "Your request has been denied.");
 		TwitchBot.getGroupConnection().sendWhisper(to, "Request denied.");
 		timeout = 0;
-		MessageHandler.forceRequestCull();
+		RequestHandler.forceRequestCull();
 	}
 
 	/**

@@ -11,9 +11,7 @@ public final class Othello extends Game {
 	public static final byte BLACK = 1, WHITE = 2;
 	private static final long EXPIRE_TIME = 180000; // 3 minutes.
 	private static final char BLACK_CHAR = 'X', WHITE_CHAR = 'O';
-	private boolean gameOver = false;
 	private byte currentByte = BLACK;
-	private String currentPlayer;
 	private long expireTime = Long.MAX_VALUE;
 	private final GameBoard gameBoard = new GameBoard();
 
@@ -21,18 +19,14 @@ public final class Othello extends Game {
 
 	public Othello(GameSession session) {
 		super(session);
-		System.out.println("byte value black: " + Integer.toHexString((byte) BLACK_CHAR) + ", white: "
-				+ Integer.toHexString((byte) WHITE_CHAR));
 		gameBoard.reset();
 		this.currentPlayer = Math.random() >= .5 ? session.getPlayer1() : session.getPlayer2();
-		TwitchBot.getGroupConnection().sendWhisper(currentPlayer, "You are player one. Make your move.");
-		sendBoard(currentPlayer);
-		if (currentPlayer.equalsIgnoreCase(session.getPlayer1())) {
-			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
-					"You are player two. Other player will move first.");
+		currentPlayer.sendWhisper("You are player one. Make your move.");
+		sendBoard(currentPlayer.getUsername());
+		if (currentPlayer.getUsername().equalsIgnoreCase(session.getPlayer1().getUsername())) {
+			session.getPlayer2().sendWhisper("You are player two. Other player will move first.");
 		} else {
-			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
-					"You are player two. Other player will move first.");
+			session.getPlayer1().sendWhisper("You are player two. Other player will move first.");
 		}
 		resetExpireTime();
 	}
@@ -40,18 +34,16 @@ public final class Othello extends Game {
 	@Override
 	public boolean gameOver() {
 		if (System.currentTimeMillis() > expireTime) {
-			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
-					"Your tic-tac-toe session has expired.");
-			TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
-					"Your tic-tac-toe session has expired.");
-			TwitchBot.getGroupConnection().sendWhisper(currentPlayer,
-					"You have lost karma for abandoning your tic-tac-toe game.");
+			session.getPlayer1().sendWhisper("Your tic-tac-toe session has expired.");
+			session.getPlayer2().sendWhisper("Your tic-tac-toe session has expired.");
+			currentPlayer.sendWhisper("You have lost karma for abandoning your tic-tac-toe game.");
+			currentPlayer.getUserData().addKarma(-100);
 			if (currentPlayer.equals(session.getPlayer1())) {
-				TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
-						"You have won the match by forfeit.");
+				session.getPlayer2().sendWhisper("You have won the match by forfeit.");
+				session.getPlayer2().getUserData().addPoints(1);
 			} else {
-				TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
-						"You have won the match by forfeit.");
+				session.getPlayer1().sendWhisper("You have won the match by forfeit.");
+				session.getPlayer1().getUserData().addPoints(1);
 			}
 			return true;
 		}
@@ -67,7 +59,7 @@ public final class Othello extends Game {
 		resetExpireTime();
 		// Message should the message without the command part in it. So, if
 		// move x y was issued, it would just be x y
-		if (user.equalsIgnoreCase(currentPlayer)) {
+		if (user.equalsIgnoreCase(currentPlayer.getUsername())) {
 			if (message.length() == 1) { // 1 character in the string.
 				try {
 					int val = Integer.parseInt(message) - 1;
@@ -84,43 +76,41 @@ public final class Othello extends Game {
 								}
 								TwitchBot.getGroupConnection().sendWhisper(user,
 										"Your turn is now over. Please wait for the other player.");
-								sendBoard(currentPlayer);
+								sendBoard(currentPlayer.getUsername());
 							} else {
 								if (currentPlayer.equals(session.getPlayer1())) {
-									sendBoard(session.getPlayer2());
-									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
-											"It seems you don't have any moves, so the other player will go again.");
-									sendBoard(session.getPlayer1());
-									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
-											"The other player has no moves, so you may move again.");
+									sendBoard(session.getPlayer2().getUsername());
+									session.getPlayer2().sendWhisper("It seems you don't have any moves, so the other player will go again.");
+									sendBoard(session.getPlayer1().getUsername());
+									session.getPlayer1().sendWhisper("The other player has no moves, so you may move again.");
 								} else {
-									sendBoard(session.getPlayer1());
-									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
-											"It seems you don't have any moves, so the other player will go again.");
-									sendBoard(session.getPlayer2());
-									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
-											"The other player has no moves, so you may move again.");
+									sendBoard(session.getPlayer1().getUsername());
+									session.getPlayer1().sendWhisper("It seems you don't have any moves, so the other player will go again.");
+									sendBoard(session.getPlayer2().getUsername());
+									session.getPlayer2().sendWhisper("The other player has no moves, so you may move again.");
 								}
 							}
 						} else {
-							sendBoard(session.getPlayer1());
-							sendBoard(session.getPlayer2());
+							sendBoard(session.getPlayer1().getUsername());
+							sendBoard(session.getPlayer2().getUsername());
 							if (hasWon(currentByte)) { // Winner!
-								TwitchBot.getGroupConnection().sendWhisper(currentPlayer, "You won!");
+								currentPlayer.sendWhisper("You won!");
+								currentPlayer.getUserData().addKarma(25);
+								currentPlayer.getUserData().addPoints(1);
 								if (currentPlayer.equals(session.getPlayer1())) {
-									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
-											"Aww, you lost. :(");
+									session.getPlayer2().sendWhisper("Aww, you lost. :(");
+									session.getPlayer2().getUserData().addKarma(25);
 								} else {
-									TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
-											"Aww, you lost. :(");
+									session.getPlayer1().sendWhisper("Aww, you lost. :(");
+									session.getPlayer1().getUserData().addKarma(25);
 								}
 							} else { // Only other case is that board is
 										// full.
 								// TODO Make karma real and save it.
-								TwitchBot.getGroupConnection().sendWhisper(session.getPlayer1(),
-										"Game ended in a draw. You've both gained karma. :3");
-								TwitchBot.getGroupConnection().sendWhisper(session.getPlayer2(),
-										"Game ended in a draw. You've both gained karma. :3");
+								session.getPlayer1().sendWhisper("Game ended in a draw. You've both gained karma. :3");
+								session.getPlayer2().sendWhisper("Game ended in a draw. You've both gained karma. :3");
+								session.getPlayer1().getUserData().addKarma(50);
+								session.getPlayer2().getUserData().addKarma(50);
 							}
 							gameOver = true;
 						}
@@ -163,7 +153,8 @@ public final class Othello extends Game {
 	}
 
 	// ffffff88 and ffffff91
-	public void sendBoard(String user) {
+	@Override
+	protected void sendBoard(String user) {
 		refreshAvailableMoves();
 		for (int x = 0; x < 8; x++) {
 			String line = "|";

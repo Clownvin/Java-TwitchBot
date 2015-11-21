@@ -9,8 +9,7 @@ import com.clown.bot.user.User;
 
 /**
  * 
- * @author Calvin
- *	Non-instantiable type that handles regex.
+ * @author Calvin Non-instantiable type that handles regex.
  */
 public final class BotRegex {
 	private static boolean regexOff = false;
@@ -38,19 +37,18 @@ public final class BotRegex {
 
 	// What ide is that?
 	private static final Pattern WIIT_PATTERN = Pattern
-			.compile("(.*)?((wh?at)\\s((ide)|(program)|(editor))\\s(is that)?\\??)(.*)?", Pattern.CASE_INSENSITIVE);
+			.compile("((wh?at)\\s((ide)|(program)|(editor))\\s(is that)?\\??)", Pattern.CASE_INSENSITIVE);
 	private static final String[] WIIT_RESPONSES = new String[] { "Eclipse: Mars" };
 
 	// Got a mic?
 	private static final Pattern GAM_PATTERN = Pattern.compile(
-			"(.*)?((((do\\s)?((you?)|(u))\\s)?((go?t)|(ha?ve?))\\s(an?)\\s)(mic(rophone)?)\\??)(.*)?",
-			Pattern.CASE_INSENSITIVE);
+			"((((do\\s)?((you?)|(u))\\s)?((go?t)|(ha?ve?))\\s(an?)\\s)(mic(rophone)?)\\??)", Pattern.CASE_INSENSITIVE);
 	private static final String[] GAM_RESPONSES = new String[] { "Effectively, no. :(", "No, he doesn't.", "Nada",
 			"Unfortunately, no." };
 
 	// Yes questions
 	private static final Pattern YQ_PATTERN = Pattern.compile(
-			"(.*)?(((el)*night(hawke?)*((,*\\s(a?re?)\\s((yo)?u))|(is))\\s(a\\s)?((ro)?bot)\\??)|((el)?night(hawke?)?('?s?)?\\s(is\\s)?(a)\\s((ro)*bot)(\\?|\\.)*)|((a?re?)\\s((yo)?u)\\s(a)\\s((ro)?bot),?\\s((el)?night(hawke?)?)\\??))(.*)?",
+			"(((el)*night(hawke?)*((,*\\s(a?re?)\\s((yo)?u))|(is))\\s(a\\s)?((ro)?bot)\\??)|((el)?night(hawke?)?('?s?)?\\s(is\\s)?(a)\\s((ro)*bot)(\\?|\\.)*)|((a?re?)\\s((yo)?u)\\s(a)\\s((ro)?bot),?\\s((el)?night(hawke?)?)\\??))",
 			Pattern.CASE_INSENSITIVE);
 	private static final String[] YQ_RESPONSES = new String[] { "Yes", "Yes", "Mhm", "Probably... :3",
 			"Well, first let's consider a spherical bot... naw, yea I am. Kappa" };
@@ -86,17 +84,49 @@ public final class BotRegex {
 
 	/**
 	 * Allows access to the array of string affirmatives.
+	 * 
 	 * @return array of affirmatives.
 	 */
 	public static String[] getAffirmatives() {
 		return AFFIRMATIVES;
 	}
 
+	public static float getPercentLikeness(String ori, String match) {
+		char[] oriChar = ori.toCharArray();
+		char[] matchChar = match.toCharArray();
+		float val = 0.0f;
+		int oriOff = ori.indexOf(matchChar[0]);
+		if (oriOff == -1) {
+			oriOff = 0;
+		}
+		for (int i = 0; i < match.length(); i++) {
+			while (i + oriOff == ori.length()) {
+				oriOff--;
+			}
+			if (matchChar[i] == oriChar[i + oriOff]) {
+				val += 1;
+			} else {
+				for (int j = i - 1; j < i + 2; j++) {
+					if (j > -1 && j < match.length()) {
+						if (matchChar[j] == oriChar[i + oriOff]) {
+							val += Math.abs((j + 1) / (i + 1));
+						}
+					}
+				}
+			}
+		}
+		return val / match.length();
+	}
+
 	// TODO Nighthawk do you love me
 	/**
-	 * Handles the message by matching it to regex patterns, and sending responses.
-	 * @param source source of the message.
-	 * @param message the message to match.
+	 * Handles the message by matching it to regex patterns, and sending
+	 * responses.
+	 * 
+	 * @param source
+	 *            source of the message.
+	 * @param message
+	 *            the message to match.
 	 */
 	public static void handleRegex(ServerConnection source, Message message) {
 		if (!regexOff) {
@@ -108,12 +138,14 @@ public final class BotRegex {
 				if (PATTERNS[i].matcher(message.message).matches() && tillCooldown[i] < System.currentTimeMillis()) {
 					String userString = message.user;
 					if (i == 0 || i == 1) {
-						for (User user : source.getChannelManager().getChannel(message.channel).getViewerList()) {
-							if (message.message.toLowerCase().contains(user.getUsername().toLowerCase())
-									&& !CONST_USER_PATTERN.matcher(message.message).matches()) {
-								userString = user.getUsername();
-								break;
-							}
+						outer: for (User user : source.getChannelManager().getChannel(message.channel)
+								.getViewerList()) {
+							Word name = new Word(user.getUsername());
+							for (String s : message.message.split(" "))
+								if (name.matches(s) && !CONST_USER_PATTERN.matcher(message.message).matches()) {
+									userString = user.getUsername();
+									break outer;
+								}
 						}
 					}
 					source.sendMessage(message.channel, RESPONSES[i][(int) (Math.random() * RESPONSES[i].length)]
@@ -126,7 +158,9 @@ public final class BotRegex {
 
 	/**
 	 * Prevents regex from being used.
-	 * @param state the state to set the variable to.
+	 * 
+	 * @param state
+	 *            the state to set the variable to.
 	 */
 	public static void setRegexOff(boolean state) {
 		regexOff = state;
