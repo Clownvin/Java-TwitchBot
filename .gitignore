@@ -5,6 +5,9 @@ ehthumbs.db
 # Twitch codez
 *.properties
 
+# Twitchbot users
+data/users/
+
 # Folder config file
 Desktop.ini
 
