@@ -75,7 +75,7 @@ public final class CommandHandler {
 					user.sendWhisper("You cannot start a poll while a poll is already taking place.");
 				}
 			} else {
-				user.sendWhisper("You cannot vote. You need to either be a mod, or have " + PollHandler.getPollToll());
+				user.sendWhisper("You cannot start a poll. You need to either be a mod, or have " + PollHandler.getPollToll());
 			}
 		}
 
@@ -255,7 +255,7 @@ public final class CommandHandler {
 				break;
 			case "startpoll":
 				user.sendWhisper(
-						"Using !startpoll <polldesc> will start a poll. You can also add your own option by using !startpoll <desc> : <option1, option2... optionN>");
+						"Using !startpoll <polldesc> will start a poll. You can also add your own option by using !startpoll <desc> : <option1> <option2>... <optionN>");
 				user.sendWhisper("It costs 36 clown points to start a poll, though.");
 				break;
 			}
