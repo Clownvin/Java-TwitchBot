@@ -18,7 +18,9 @@ import com.clown.util.Util;
  * 
  * @author Calvin
  *
- *	This class is the true "main" object. Everything revolves around this object, and all input and output flows through an instance of this object.
+ *         This class is the true "main" object. Everything revolves around this
+ *         object, and all input and output flows through an instance of this
+ *         object.
  */
 public final class ServerConnection extends Thread {
 	private final String ip;
@@ -34,14 +36,16 @@ public final class ServerConnection extends Thread {
 	private volatile ArrayList<String> messages = new ArrayList<String>();
 
 	/**
-	 * This throttles the output of whisper messages, so that the bot doesn't get notifications about being too fast.
+	 * This throttles the output of whisper messages, so that the bot doesn't
+	 * get notifications about being too fast.
 	 */
 	private final Thread whisperThrottler = new Thread() {
 		@Override
 		public void run() {
 			while (!TwitchBot.killIssued()) {
 				try {
-					Thread.sleep(400); // Sleep for 400MS before sending the next message. 
+					Thread.sleep(400); // Sleep for 400MS before sending the
+										// next message.
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -62,9 +66,15 @@ public final class ServerConnection extends Thread {
 
 	/**
 	 * Constructor for a new instance of server connection.
-	 * @param ip IP of the server to connect to.
-	 * @param port port of the server to connect to.
-	 * @throws IOException if an IOException is thrown while creating socket, output, or input, throw it to the caller since this object is basically useless then.
+	 * 
+	 * @param ip
+	 *            IP of the server to connect to.
+	 * @param port
+	 *            port of the server to connect to.
+	 * @throws IOException
+	 *             if an IOException is thrown while creating socket, output, or
+	 *             input, throw it to the caller since this object is basically
+	 *             useless then.
 	 */
 	public ServerConnection(final String ip, final int port) throws IOException {
 		this.ip = ip;
@@ -93,6 +103,7 @@ public final class ServerConnection extends Thread {
 
 	/**
 	 * Allows other objects to get the channel manager.
+	 * 
 	 * @return the current channelManager object.
 	 */
 	public ChannelManager getChannelManager() {
@@ -100,9 +111,13 @@ public final class ServerConnection extends Thread {
 	}
 
 	/**
-	 * Allows other objects to obtain the <code>User</code> object for a certain user.
-	 * @param channel channel of the user.
-	 * @param username username of the user.
+	 * Allows other objects to obtain the <code>User</code> object for a certain
+	 * user.
+	 * 
+	 * @param channel
+	 *            channel of the user.
+	 * @param username
+	 *            username of the user.
 	 * @return the User object for that user, if one exists. Otherwise null.
 	 */
 	public User getUser(String channel, String username) {
@@ -115,8 +130,11 @@ public final class ServerConnection extends Thread {
 	}
 
 	/**
-	 * First step in interpreting input from the input stream. Directs the message to where it needs to go based on its command.
-	 * @param line line of input to process.
+	 * First step in interpreting input from the input stream. Directs the
+	 * message to where it needs to go based on its command.
+	 * 
+	 * @param line
+	 *            line of input to process.
 	 */
 	private void handleLine(String line) {
 		if (line.contains("PING :")) {
@@ -136,8 +154,11 @@ public final class ServerConnection extends Thread {
 	}
 
 	/**
-	 * Sends a JOIN command for the channel requested. Upon joining, input and output between this channel will be possible.
-	 * @param channel the channel to join.
+	 * Sends a JOIN command for the channel requested. Upon joining, input and
+	 * output between this channel will be possible.
+	 * 
+	 * @param channel
+	 *            the channel to join.
 	 */
 	public void joinChannel(String channel) {
 		if (channelManager.addChannel(channel)) {
@@ -148,7 +169,8 @@ public final class ServerConnection extends Thread {
 	}
 
 	/**
-	 * Overridden run method. Each step of the while-loop, a single line is read from the input stream, and <code>handleLine</code> is called.
+	 * Overridden run method. Each step of the while-loop, a single line is read
+	 * from the input stream, and <code>handleLine</code> is called.
 	 */
 	@Override
 	public void run() {
@@ -158,11 +180,14 @@ public final class ServerConnection extends Thread {
 			handleLine(line);
 		}
 	}
-	
+
 	/**
 	 * Sends a command with the message provided through the output stream.
-	 * @param command command to send.
-	 * @param message message to send.
+	 * 
+	 * @param command
+	 *            command to send.
+	 * @param message
+	 *            message to send.
 	 * @return true if everything goes smoothly, false if else.
 	 */
 	public boolean sendCommand(String command, String message) {
@@ -176,15 +201,19 @@ public final class ServerConnection extends Thread {
 	}
 
 	/**
-	 * Sends a message to a channel. Converts the String to bytes and sends them through the output stream.
-	 * @param channel the channel to send the message on.
-	 * @param message the message to send.
+	 * Sends a message to a channel. Converts the String to bytes and sends them
+	 * through the output stream.
+	 * 
+	 * @param channel
+	 *            the channel to send the message on.
+	 * @param message
+	 *            the message to send.
 	 * @return true if everything goes well, false if else.
 	 */
 	public synchronized boolean sendMessage(String channel, String message) {
 		System.out.println("Sending message: " + message + " to : " + channel);
 		try {
-			//Write the message to the output stream.
+			// Write the message to the output stream.
 			output.write(Util.toBytes("PRIVMSG " + channel + " :" + message + "\r\n"));
 			output.flush();
 		} catch (IOException e) {
@@ -195,10 +224,17 @@ public final class ServerConnection extends Thread {
 	}
 
 	/**
-	 * Sends a whisper to a user. Adds the user and message to two array lists, and the whisperThrottler thread handles the actual sending of the messages, since they need to be throttled.
-	 * @param user user to send the whisper to.
-	 * @param message message to send.
-	 * @return true always (used to have the possibility to send false, but because it no longer handles the actual sending, it can't know if there was an issue)
+	 * Sends a whisper to a user. Adds the user and message to two array lists,
+	 * and the whisperThrottler thread handles the actual sending of the
+	 * messages, since they need to be throttled.
+	 * 
+	 * @param user
+	 *            user to send the whisper to.
+	 * @param message
+	 *            message to send.
+	 * @return true always (used to have the possibility to send false, but
+	 *         because it no longer handles the actual sending, it can't know if
+	 *         there was an issue)
 	 */
 	public synchronized boolean sendWhisper(String user, String message) {
 		users.add(user);

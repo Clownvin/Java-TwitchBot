@@ -8,8 +8,8 @@ import com.clown.bot.games.tictactoe.TicTacToe;
 
 /**
  * 
- * @author Calvin
- *	This object is a non-instantiable type that handles all current GameSession objects.
+ * @author Calvin This object is a non-instantiable type that handles all
+ *         current GameSession objects.
  */
 public final class GameManager {
 	private static final ArrayList<GameSession> sessions = new ArrayList<GameSession>();
@@ -39,10 +39,15 @@ public final class GameManager {
 	}
 
 	/**
-	 * Allows for the construction of a new game session between user1 and user2, with a game specified.
-	 * @param user1 user1's name.
-	 * @param user2 user2's name.
-	 * @param gameType the game to be played.
+	 * Allows for the construction of a new game session between user1 and
+	 * user2, with a game specified.
+	 * 
+	 * @param user1
+	 *            user1's name.
+	 * @param user2
+	 *            user2's name.
+	 * @param gameType
+	 *            the game to be played.
 	 */
 	public static void createSession(String user1, String user2, String gameType) {
 		Game game = null;
@@ -74,8 +79,11 @@ public final class GameManager {
 
 	/**
 	 * Allows access to individual game sessions.
-	 * @param user username to search sessions for.
-	 * @return the session containing a user with the same name as user, or null if there isn't one.
+	 * 
+	 * @param user
+	 *            username to search sessions for.
+	 * @return the session containing a user with the same name as user, or null
+	 *         if there isn't one.
 	 */
 	public static GameSession getSession(String user) {
 		for (GameSession session : sessions) {

@@ -5,8 +5,8 @@ import com.clown.bot.user.User;
 
 /**
  * 
- * @author Calvin
- *	A container object containing the two users playing the game, and the game object itself.
+ * @author Calvin A container object containing the two users playing the game,
+ *         and the game object itself.
  */
 public final class GameSession {
 	private final User user1, user2;
@@ -14,8 +14,11 @@ public final class GameSession {
 
 	/**
 	 * Constructor for a new game session.
-	 * @param user1 user1's name.
-	 * @param user2 user2's name.
+	 * 
+	 * @param user1
+	 *            user1's name.
+	 * @param user2
+	 *            user2's name.
 	 */
 	public GameSession(String user1, String user2) {
 		this.user1 = TwitchBot.getIRCConnection().getUser(TwitchBot.DEFAULT_CHANNELS[0], user1);
@@ -24,6 +27,7 @@ public final class GameSession {
 
 	/**
 	 * Allows access to the game object.
+	 * 
 	 * @return the game object.
 	 */
 	public Game getGame() {
@@ -32,6 +36,7 @@ public final class GameSession {
 
 	/**
 	 * Allows access to the user1's string name.
+	 * 
 	 * @return user1's string name.
 	 */
 	public User getPlayer1() {
@@ -40,6 +45,7 @@ public final class GameSession {
 
 	/**
 	 * Allows access to the user2's string name.
+	 * 
 	 * @return user2's string name.
 	 */
 	public User getPlayer2() {
@@ -48,7 +54,9 @@ public final class GameSession {
 
 	/**
 	 * Checks whether or not the username provided is one of the two players.
-	 * @param user username to check against.
+	 * 
+	 * @param user
+	 *            username to check against.
 	 * @return true if the username provided is a player, false if they aren't.
 	 */
 	public boolean isPlayer(String user) {
@@ -57,7 +65,9 @@ public final class GameSession {
 
 	/**
 	 * Sets the current game object to the one provided.
-	 * @param game the game object to set.
+	 * 
+	 * @param game
+	 *            the game object to set.
 	 */
 	public void setGame(Game game) {
 		this.game = game;

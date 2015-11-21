@@ -13,22 +13,20 @@ import com.clown.util.Util;
  */
 public final class MessageHandler {
 	private static String videoLink = "Not currently set";
-	
+
 	public static void setVideoLink(String link) {
 		videoLink = link;
 	}
-	
+
 	public static String getVideoLink() {
 		return videoLink;
 	}
-	
+
 	public static void setModerate(boolean state) {
 		moderateOn = state;
 	}
 
 	private static boolean moderateOn = false;
-
-	
 
 	/**
 	 * First step in processing a message object from

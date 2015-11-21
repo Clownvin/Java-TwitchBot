@@ -5,8 +5,8 @@ import com.clown.io.Action;
 
 /**
  * 
- * @author Calvin
- *	Basic container object containing information about requests made between users.
+ * @author Calvin Basic container object containing information about requests
+ *         made between users.
  */
 public final class Request {
 	private final String from;
@@ -16,9 +16,13 @@ public final class Request {
 
 	/**
 	 * Constructor for a new request instance.
-	 * @param from the request sender.
-	 * @param to the request receiver.
-	 * @param action the action to be taken if the request is accepted.
+	 * 
+	 * @param from
+	 *            the request sender.
+	 * @param to
+	 *            the request receiver.
+	 * @param action
+	 *            the action to be taken if the request is accepted.
 	 */
 	public Request(final String from, final String to, final Action action) {
 		this.from = from;
@@ -49,6 +53,7 @@ public final class Request {
 
 	/**
 	 * Allows access to the <code>Action</code> object.
+	 * 
 	 * @return the action object of this request.
 	 */
 	public Action getAction() {
@@ -57,6 +62,7 @@ public final class Request {
 
 	/**
 	 * Allows access to the username of the request sender.
+	 * 
 	 * @return the username of the request sender.
 	 */
 	public String getFrom() {
@@ -65,6 +71,7 @@ public final class Request {
 
 	/**
 	 * Allows access to the username of the request receiver.
+	 * 
 	 * @return the username of the request receiver.
 	 */
 	public String getTo() {
@@ -73,6 +80,7 @@ public final class Request {
 
 	/**
 	 * Checks whether or not the timeout on this request has been reached.
+	 * 
 	 * @return true if timeout has been reached, false if it hasn't.
 	 */
 	public boolean timeoutReached() {

@@ -80,7 +80,7 @@ public final class CommandHandler {
 		}
 
 	}, new Command("!pollinfo") {
-		
+
 		@Override
 		public void handleCommand(User user, String[] args, String message) {
 			if (PollHandler.pollActive()) {
@@ -89,7 +89,7 @@ public final class CommandHandler {
 				user.sendWhisper("There is no currently active poll.");
 			}
 		}
-		
+
 	}, new Command("!invite") {
 
 		@Override
@@ -193,7 +193,8 @@ public final class CommandHandler {
 		public void handleCommand(User user, String[] args, String message) {
 			user.sendWhisper(
 					"Current commands: !karma - tells you your current amount of karma. !points - tells you your current amount of points. !info <command> - gives you useful info about a command. !startpoll description - starts a poll. !song - gets link of song. !commands - this.");
-			user.sendWhisper("Commands cont.: !move # - makes move while in a game. !invite <game> <user> - invites user to a game. !accept - accepts invitation. !decline - declines or cancels invitation.");
+			user.sendWhisper(
+					"Commands cont.: !move # - makes move while in a game. !invite <game> <user> - invites user to a game. !accept - accepts invitation. !decline - declines or cancels invitation.");
 		}
 
 	}, new Command("!song") {
@@ -225,17 +226,20 @@ public final class CommandHandler {
 		public void handleCommand(User user, String[] args, String message) {
 			switch (message) {
 			case "info":
-				user.sendWhisper("You can use this command to get info about other commands by typing !info <command>.");
+				user.sendWhisper(
+						"You can use this command to get info about other commands by typing !info <command>.");
 				break;
 			case "points":
 			case "karma":
 				user.sendWhisper("Using !karma or !points will how how many of either you have.");
 				break;
 			case "song":
-				user.sendWhisper("Using !song will send you a link to the song on YouTube. But, I don't naturally know the link, so the broadcaster has to set it manually.");
+				user.sendWhisper(
+						"Using !song will send you a link to the song on YouTube. But, I don't naturally know the link, so the broadcaster has to set it manually.");
 				break;
 			case "commands":
-				user.sendWhisper("Using !commands will give you a list of all available commands, minus the temporary commands.");
+				user.sendWhisper(
+						"Using !commands will give you a list of all available commands, minus the temporary commands.");
 				break;
 			case "move":
 				user.sendWhisper("Using !move # will allow you to enter commands to your current game.");
@@ -250,14 +254,15 @@ public final class CommandHandler {
 				user.sendWhisper("Using !invite <game> <user> will invite the user to a game.");
 				break;
 			case "startpoll":
-				user.sendWhisper("Using !startpoll <polldesc> will start a poll. You can also add your own option by using !startpoll <desc> : <option1, option2... optionN>");
+				user.sendWhisper(
+						"Using !startpoll <polldesc> will start a poll. You can also add your own option by using !startpoll <desc> : <option1, option2... optionN>");
 				user.sendWhisper("It costs 36 clown points to start a poll, though.");
 				break;
 			}
 		}
-		
+
 	} };
-	
+
 	private static final ArrayList<Command> temporaryCommands = new ArrayList<Command>();
 
 	// Command ideas: !info command - get info on how to use a command
@@ -265,11 +270,11 @@ public final class CommandHandler {
 	private CommandHandler() {
 		// To prevent instantiation.
 	}
-	
+
 	public static void addTempCommand(Command command) {
 		temporaryCommands.add(command);
 	}
-	
+
 	public static void removeTempCommand(Command command) {
 		temporaryCommands.remove(command);
 	}

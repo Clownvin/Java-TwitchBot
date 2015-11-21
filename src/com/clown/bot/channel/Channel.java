@@ -10,8 +10,8 @@ import com.clown.io.BasicIO;
 
 /**
  * 
- * @author Calvin
- * Channel is a container object for information about channels and their users.
+ * @author Calvin Channel is a container object for information about channels
+ *         and their users.
  */
 public final class Channel {
 	private final String channel;
@@ -20,7 +20,9 @@ public final class Channel {
 
 	/**
 	 * Constructor for a new Channel object.
-	 * @param channel the name of the channel this object represents.
+	 * 
+	 * @param channel
+	 *            the name of the channel this object represents.
 	 */
 	public Channel(final String channel) {
 		this.channel = channel;
@@ -29,6 +31,7 @@ public final class Channel {
 
 	/**
 	 * Allows access to the String name of the channel.
+	 * 
 	 * @return the channel name.
 	 */
 	public String getChannel() {
@@ -36,7 +39,9 @@ public final class Channel {
 	}
 
 	/**
-	 * Allows access to the randomly generated color of the channel (this has no meaning except for creating GUIs)
+	 * Allows access to the randomly generated color of the channel (this has no
+	 * meaning except for creating GUIs)
+	 * 
 	 * @return the color of the channel.
 	 */
 	public Color getColor() {
@@ -45,6 +50,7 @@ public final class Channel {
 
 	/**
 	 * Allows access to the list of users.
+	 * 
 	 * @return the viewerList object.
 	 */
 	public ArrayList<User> getViewerList() {
@@ -105,7 +111,8 @@ public final class Channel {
 			for (int i = 0; i < parsedUsers.size(); i++) {
 				if (!viewerList.contains(parsedUsers.get(i))) {
 					parsedUsers.get(i).loadUserData();
-					//System.out.println("User joined ["+channel+"]: "+parsedUsers.get(i).getUsername());
+					// System.out.println("User joined ["+channel+"]:
+					// "+parsedUsers.get(i).getUsername());
 					viewerList.add(parsedUsers.get(i));
 					continue;
 				}
@@ -113,7 +120,8 @@ public final class Channel {
 			for (int i = 0; i < viewerList.size(); i++) {
 				if (!parsedUsers.contains(viewerList.get(i))) {
 					viewerList.get(i).save();
-					//System.out.println("User left ["+channel+"]: "+viewerList.get(i).getUsername());
+					// System.out.println("User left ["+channel+"]:
+					// "+viewerList.get(i).getUsername());
 					viewerList.remove(i);
 				}
 			}

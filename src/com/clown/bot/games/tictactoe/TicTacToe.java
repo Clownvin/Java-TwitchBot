@@ -97,8 +97,10 @@ public class TicTacToe extends Game {
 								} else {
 									session.getPlayer1().getUserData().addKarma(50);
 									session.getPlayer2().getUserData().addKarma(50);
-									session.getPlayer1().sendWhisper("Game ended in a draw. You've both gained karma. :3");
-									session.getPlayer2().sendWhisper("Game ended in a draw. You've both gained karma. :3");
+									session.getPlayer1()
+											.sendWhisper("Game ended in a draw. You've both gained karma. :3");
+									session.getPlayer2()
+											.sendWhisper("Game ended in a draw. You've both gained karma. :3");
 								}
 								gameOver = true;
 							}

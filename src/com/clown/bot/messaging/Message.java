@@ -4,8 +4,8 @@ import com.clown.bot.TwitchBot;
 
 /**
  * 
- * @author Calvin
- *	A basic container object containing the info from a message string.
+ * @author Calvin A basic container object containing the info from a message
+ *         string.
  */
 public final class Message {
 	public final String user;
@@ -15,7 +15,9 @@ public final class Message {
 
 	/**
 	 * Constructor for a new Message instance.
-	 * @param line the line to parse for data.
+	 * 
+	 * @param line
+	 *            the line to parse for data.
 	 */
 	public Message(final String line) {
 		try {
@@ -39,9 +41,13 @@ public final class Message {
 
 	/**
 	 * Constructor for a new Message instance.
-	 * @param user username of the sender.
-	 * @param channel channel of the sender.
-	 * @param message message contents.
+	 * 
+	 * @param user
+	 *            username of the sender.
+	 * @param channel
+	 *            channel of the sender.
+	 * @param message
+	 *            message contents.
 	 */
 	public Message(final String user, final String channel, final String message) {
 		this.user = user;

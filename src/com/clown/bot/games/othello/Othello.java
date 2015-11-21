@@ -80,14 +80,18 @@ public final class Othello extends Game {
 							} else {
 								if (currentPlayer.equals(session.getPlayer1())) {
 									sendBoard(session.getPlayer2().getUsername());
-									session.getPlayer2().sendWhisper("It seems you don't have any moves, so the other player will go again.");
+									session.getPlayer2().sendWhisper(
+											"It seems you don't have any moves, so the other player will go again.");
 									sendBoard(session.getPlayer1().getUsername());
-									session.getPlayer1().sendWhisper("The other player has no moves, so you may move again.");
+									session.getPlayer1()
+											.sendWhisper("The other player has no moves, so you may move again.");
 								} else {
 									sendBoard(session.getPlayer1().getUsername());
-									session.getPlayer1().sendWhisper("It seems you don't have any moves, so the other player will go again.");
+									session.getPlayer1().sendWhisper(
+											"It seems you don't have any moves, so the other player will go again.");
 									sendBoard(session.getPlayer2().getUsername());
-									session.getPlayer2().sendWhisper("The other player has no moves, so you may move again.");
+									session.getPlayer2()
+											.sendWhisper("The other player has no moves, so you may move again.");
 								}
 							}
 						} else {

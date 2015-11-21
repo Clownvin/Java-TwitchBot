@@ -7,12 +7,12 @@ import com.clown.bot.TwitchBot;
 public final class RequestHandler {
 	public static final long REQUEST_TIMEOUT = 60000; // 1 min
 	public static final long REQUEST_DELAY = 10000; // 10 seconds
-	
+
 	private static final ArrayList<Request> pendingRequests = new ArrayList<Request>();
 
 	// We're going to assume that all request exist ONLY on the
 	// DEFAULT_CHANNELS[0]
-	
+
 	/**
 	 * A thread to cull expired requests from the request list.
 	 */
@@ -35,7 +35,7 @@ public final class RequestHandler {
 			}
 		}
 	};
-	
+
 	static {
 		REQUEST_CULLER.start();
 	}
@@ -62,16 +62,18 @@ public final class RequestHandler {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Adds a request to the list
-	 * @param request request to be added.
+	 * 
+	 * @param request
+	 *            request to be added.
 	 */
 	public static void addRequest(Request request) {
 		pendingRequests.add(request);
 	}
-	
+
 	private RequestHandler() {
-		//Prevent instantiation.
+		// Prevent instantiation.
 	}
 }

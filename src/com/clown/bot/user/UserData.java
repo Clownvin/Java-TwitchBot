@@ -13,50 +13,50 @@ public final class UserData {
 	private int karma = 0;
 	private int points = 0;
 	private final String user;
-	
+
 	private UserData(String user, int karma, int points) {
 		this.user = user;
 		this.karma = karma;
 		this.points = points;
 	}
-	
+
 	public int getKarma() {
 		return karma;
 	}
-	
+
 	public int getPoints() {
 		return points;
 	}
-	
+
 	public void addKarma(int karma) {
 		this.karma += karma;
 		saveData();
 	}
-	
+
 	public void addPoints(int points) {
 		this.points += points;
 		saveData();
 	}
-	
+
 	public void saveData() {
-		File userFile = new File("./data/users/"+user+".txt");
+		File userFile = new File("./data/users/" + user + ".txt");
 		File userDirectory = new File("./data/users/");
 		if (!userDirectory.exists()) {
 			userDirectory.mkdirs();
 		}
 		try {
 			FileWriter out = new FileWriter(userFile);
-			out.write(""+karma+"\n");
-			out.write(""+points+"\n");
+			out.write("" + karma + "\n");
+			out.write("" + points + "\n");
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			TwitchBot.getGroupConnection().sendWhisper(user, "There was an exception while saving your file. :(");
 		}
 	}
-	
+
 	public static UserData loadUserData(String user) {
-		File userFile = new File("./data/users/"+user+".txt");
+		File userFile = new File("./data/users/" + user + ".txt");
 		File userDirectory = new File("./data/users/");
 		if (!userDirectory.exists()) {
 			userDirectory.mkdirs();
