@@ -7,123 +7,135 @@ import com.clown.bot.TwitchBot;
  * @author Calvin A basic container type containing information about a user.
  */
 public final class User {
-	private final String username;
-	private final UserType type;
-	private long requestDelay;
-	private long commandDelay;
-	private UserData userData = null;
+    private final String username;
+    private final UserType type;
+    private long requestDelay;
+    private long commandDelay;
+    private UserData userData = null;
+    private int banWarning = 0;
 
-	/**
-	 * Constructor for a new instance.
-	 * 
-	 * @param username
-	 *            username of the user.
-	 * @param type
-	 *            type of user.
-	 */
-	public User(final String username, UserType type) {
-		this.username = username;
-		this.type = type;
-		this.requestDelay = System.currentTimeMillis();
-		this.commandDelay = System.currentTimeMillis();
+    public void addWarning() {
+	banWarning++;
+	if (banWarning == 3) {
+	    TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0], "/ban " + username + "");
 	}
+    }
 
-	/*
-	 * 
-	 * /** Checks whether or not the command delay has passed.
-	 * 
-	 * @return true if the delay has passed, false if it hasn't.
-	 */
-	public boolean commandDelayPassed() {
-		return System.currentTimeMillis() - commandDelay > 0;
-	}
+    public int getWarnings() {
+	return banWarning;
+    }
 
-	/**
-	 * Allows access to the type of this user container.
-	 * 
-	 * @return the type of user.
-	 */
-	public UserType getType() {
-		return type;
-	}
+    /**
+     * Constructor for a new instance.
+     * 
+     * @param username
+     *            username of the user.
+     * @param type
+     *            type of user.
+     */
+    public User(final String username, UserType type) {
+	this.username = username;
+	this.type = type;
+	this.requestDelay = System.currentTimeMillis();
+	this.commandDelay = System.currentTimeMillis();
+    }
 
-	/**
-	 * Allows access to the username of this user object.
-	 * 
-	 * @return the username.
-	 */
-	public String getUsername() {
-		return username;
-	}
+    /*
+     * 
+     * /** Checks whether or not the command delay has passed.
+     * 
+     * @return true if the delay has passed, false if it hasn't.
+     */
+    public boolean commandDelayPassed() {
+	return System.currentTimeMillis() - commandDelay > 0;
+    }
 
-	/**
-	 * Checks whether the delay has passed.
-	 * 
-	 * @return true if the delay has passed, false if it hasn't.
-	 */
-	public boolean requestDelayPassed() {
-		return System.currentTimeMillis() - requestDelay > 0;
-	}
+    /**
+     * Allows access to the type of this user container.
+     * 
+     * @return the type of user.
+     */
+    public UserType getType() {
+	return type;
+    }
 
-	/**
-	 * Sets the command delay.
-	 * 
-	 * @param delay
-	 *            delay in milliseconds.
-	 */
-	public void setCommandDelay(long delay) {
-		this.commandDelay = System.currentTimeMillis() + delay;
-	}
+    /**
+     * Allows access to the username of this user object.
+     * 
+     * @return the username.
+     */
+    public String getUsername() {
+	return username;
+    }
 
-	/**
-	 * Sets the request delay.
-	 * 
-	 * @param delay
-	 *            delay in milliseconds.
-	 */
-	public void setRequestDelay(long delay) {
-		this.requestDelay = System.currentTimeMillis() + delay;
-	}
+    /**
+     * Checks whether the delay has passed.
+     * 
+     * @return true if the delay has passed, false if it hasn't.
+     */
+    public boolean requestDelayPassed() {
+	return System.currentTimeMillis() - requestDelay > 0;
+    }
 
-	/**
-	 * Allows access to the UserData for this user
-	 * 
-	 * @return the current UserData for this user.
-	 */
-	public UserData getUserData() {
-		return userData;
-	}
+    /**
+     * Sets the command delay.
+     * 
+     * @param delay
+     *            delay in milliseconds.
+     */
+    public void setCommandDelay(long delay) {
+	this.commandDelay = System.currentTimeMillis() + delay;
+    }
 
-	/**
-	 * Loads the UserData.
-	 */
-	public void loadUserData() {
-		this.userData = UserData.loadUserData(username);
-	}
+    /**
+     * Sets the request delay.
+     * 
+     * @param delay
+     *            delay in milliseconds.
+     */
+    public void setRequestDelay(long delay) {
+	this.requestDelay = System.currentTimeMillis() + delay;
+    }
 
-	/**
-	 * Saves the data for this user.
-	 */
-	public void save() {
-		userData.saveData();
-	}
+    /**
+     * Allows access to the UserData for this user
+     * 
+     * @return the current UserData for this user.
+     */
+    public UserData getUserData() {
+	return userData;
+    }
 
-	/**
-	 * Sends whisper to user.
-	 * 
-	 * @param message
-	 *            the contents of the whisper
-	 */
-	public void sendWhisper(String message) {
-		TwitchBot.getGroupConnection().sendWhisper(username, message);
-	}
+    /**
+     * Loads the UserData.
+     */
+    public void loadUserData() {
+	this.userData = UserData.loadUserData(username);
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (other instanceof User) {
-			return ((User) other).getUsername().equals(username);
-		} else {
-			return false;
-		}
+    /**
+     * Saves the data for this user.
+     */
+    public void save() {
+	userData.saveData();
+    }
+
+    /**
+     * Sends whisper to user.
+     * 
+     * @param message
+     *            the contents of the whisper
+     */
+    public void sendWhisper(String message) {
+	TwitchBot.getGroupConnection().sendWhisper(username, message);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+	if (other instanceof User) {
+	    return ((User) other).getUsername().equals(username);
+	} else {
+	    return false;
 	}
+    }
 }
