@@ -111,7 +111,7 @@ public final class Channel {
 			for (int i = 0; i < parsedUsers.size(); i++) {
 				if (!viewerList.contains(parsedUsers.get(i))) {
 					parsedUsers.get(i).loadUserData();
-					System.out.println("User joined [" + channel + "]: " + parsedUsers.get(i).getUsername());
+					System.out.println("User joined [" + channel + "]: " + parsedUsers.get(i).getUsername()+" of type "+parsedUsers.get(i).getType());
 					viewerList.add(parsedUsers.get(i));
 				}
 			}

@@ -58,15 +58,8 @@ public final class MessageHandler {
 		}
 		System.out.println(
 				"[" + message.channel.replace("#", "") + "] " + message.user + ": \"" + message.message + "\"");
-		if (registeredOnly) {
-			message.message = message.message.substring(message.message.indexOf("a") + 2); // Should
-																							// pop
-																							// the
-																							// 'a'
-																							// off.
-		}
 		if (message.message.startsWith("!")) {
-			CommandHandler.handleCommand(source, message);
+			CommandHandler.handleCommand(source, message, false);
 			return;
 		}
 		BotRegex.handleRegex(source, message);
@@ -83,23 +76,7 @@ public final class MessageHandler {
 	public static void handleWhisper(ServerConnection source, Message message) {
 		System.out.println("[Whisper] " + message.user + ": " + message.message + "");
 		if (message.message.startsWith("!")) {
-			if (message.message.startsWith("!register")) {
-				User user = TwitchBot.getIRCConnection().getUser(TwitchBot.DEFAULT_CHANNELS[0], message.user);
-				if (user != null) {
-					if (user.getUserData().isRegistered()) {
-						user.sendWhisper("You're already registered.");
-					} else {
-						user.getUserData().register();
-						user.sendWhisper("Thanks for registering!");
-					}
-				} else {
-					TwitchBot.getGroupConnection().sendWhisper(message.user,
-							"I couldn't find your user object. Try again in 30 seconds.");
-					TwitchBot.getIRCConnection().getChannelManager().forceRefresh();
-				}
-				return;
-			}
-			CommandHandler.handleCommand(source, message);
+			CommandHandler.handleCommand(source, message, true);
 			return;
 		}
 	}
@@ -122,6 +99,7 @@ public final class MessageHandler {
 						"This room is currently in registered only mode. You can whisper me \"!register\" to get registered. Otherwise, you'll be banned.");
 				user.addWarning();
 				source.sendMessage(message.channel, ".timeout " + message.user + " " + 60);
+				return true;
 			}
 		}
 		if (message.message.length() > 5 && moderateOn) {

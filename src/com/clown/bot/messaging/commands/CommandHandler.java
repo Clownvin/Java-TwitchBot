@@ -19,6 +19,7 @@ import com.clown.io.Action;
 public final class CommandHandler {
 
 	private static final Command[] DEFAULT_MOD_COMMANDS = new Command[] {
+			
 			new Command("!setsong", "Sets the current song link", "Use this to set the current song link.") {
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -31,7 +32,9 @@ public final class CommandHandler {
 								"You must include a video link after the command, sir. Like: !setsong YT-Link");
 					}
 				}
-			}, new Command("!sendmessage", "Sends a message to a specific destination",
+			}, 
+			
+			new Command("!sendmessage", "Sends a message to a specific destination",
 					"Sends a message to a destination (!sendmessage <dest> <message>).") {
 
 				@Override
@@ -65,7 +68,9 @@ public final class CommandHandler {
 					}
 				}
 
-			}, new Command("!regexoff", "Sets regex to off", "Use this to set regex off.") {
+			}, 
+			
+			new Command("!regexoff", "Sets regex to off", "Use this to set regex off.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -73,7 +78,9 @@ public final class CommandHandler {
 					user.sendWhisper(
 							BotRegex.getAffirmatives()[(int) (Math.random() * BotRegex.getAffirmatives().length)]);
 				}
-			}, new Command("!regexon", "Sets regex to on", "Use this to set regex on.") {
+			}, 
+			
+			new Command("!regexon", "Sets regex to on", "Use this to set regex on.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -82,7 +89,9 @@ public final class CommandHandler {
 							BotRegex.getAffirmatives()[(int) (Math.random() * BotRegex.getAffirmatives().length)]);
 				}
 
-			}, new Command("!moderateoff", "Sets moderate to off", "Use this to set moderate off.") {
+			}, 
+			
+			new Command("!moderateoff", "Sets moderate to off", "Use this to set moderate off.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -90,7 +99,9 @@ public final class CommandHandler {
 					user.sendWhisper(
 							BotRegex.getAffirmatives()[(int) (Math.random() * BotRegex.getAffirmatives().length)]);
 				}
-			}, new Command("!moderateon", "Sets moderate to on", "Use this to set moderate on.") {
+			},
+			
+			new Command("!moderateon", "Sets moderate to on", "Use this to set moderate on.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -98,7 +109,9 @@ public final class CommandHandler {
 					user.sendWhisper(
 							BotRegex.getAffirmatives()[(int) (Math.random() * BotRegex.getAffirmatives().length)]);
 				}
-			}, new Command("!registon", "A mode, for spammers.", "Turns A mode on.") {
+			},
+			
+			new Command("!registon", "A mode, for spammers.", "Turns A mode on.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -106,7 +119,9 @@ public final class CommandHandler {
 					TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0],
 							"Registered-only chat is now on. You must !register by whispering the command to me.");
 				}
-			}, new Command("!registoff", "Turns off registeredOnly mode", "Turns registeredOnly mode off.") {
+			},
+			
+			new Command("!registoff", "Turns off registeredOnly mode", "Turns registeredOnly mode off.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -119,6 +134,24 @@ public final class CommandHandler {
 	private static final Command[] DEFAULT_ADMIN_COMMANDS = new Command[] {};
 	private static final Command[] DEFAULT_GLOBAL_MOD_COMMANDS = new Command[] {};
 	private static final Command[] DEFAULT_VIEWER_COMMANDS = new Command[] {
+			
+			new Command("!register", "Registers you. You MUST whisper this command to me.",
+					"Registers you. You MUST whisper this command to me. Usage: /w ElNighthawk !register") {
+
+				@Override
+				public void handleCommand(User user, String[] args, String message) {
+					if (user != null) {
+						if (user.getUserData().isRegistered()) {
+							user.sendWhisper("You're already registered.");
+						} else {
+							user.getUserData().register();
+							user.sendWhisper("Thanks for registering!");
+						}
+					}
+				}
+
+			},
+			
 			new Command("!startpoll", "Use this to start a poll in the channel",
 					"Allows you to start a poll (!startpoll <polldesc> : <option1> <option2>..<optionN>).") {
 
@@ -141,7 +174,9 @@ public final class CommandHandler {
 					}
 				}
 
-			}, new Command("!pollinfo", "Allows you to see the current poll info",
+			}, 
+			
+			new Command("!pollinfo", "Allows you to see the current poll info",
 					"Use this to get the current poll info sent to you.") {
 
 				@Override
@@ -153,7 +188,9 @@ public final class CommandHandler {
 					}
 				}
 
-			}, new Command("!invite", "Allows you to invite other viewers into a game",
+			},
+			
+			new Command("!invite", "Allows you to invite other viewers into a game",
 					"Use this to invite others to games (!invite <game> <user>).") {
 
 				@Override
@@ -214,7 +251,9 @@ public final class CommandHandler {
 					}
 				}
 
-			}, new Command("!accept", "Lets you accept an invitation", "Use this to accept any invites you recieve.") {
+			},
+			
+			new Command("!accept", "Lets you accept an invitation", "Use this to accept any invites you recieve.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -230,7 +269,9 @@ public final class CommandHandler {
 					}
 				}
 
-			}, new Command("!decline", "Lets you decline an invitation", "Use this to decline invitations.") {
+			},
+			
+			new Command("!decline", "Lets you decline an invitation", "Use this to decline invitations.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -242,7 +283,9 @@ public final class CommandHandler {
 					}
 				}
 
-			}, new Command("!move", "Allows you to make a move while in a game",
+			},
+			
+			new Command("!move", "Allows you to make a move while in a game",
 					"Lets you make a move in a game. Typical usage: !move <num>") {
 
 				@Override
@@ -255,7 +298,9 @@ public final class CommandHandler {
 					}
 				}
 
-			}, new Command("!commands", "Lets you see this list", "I don't think you need info on this one lol.") {
+			},
+			
+			new Command("!commands", "Lets you see this list", "I don't think you need info on this one lol.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -323,7 +368,9 @@ public final class CommandHandler {
 					}
 				}
 
-			}, new Command("!song", "Whispers the link to the song Kappa",
+			},
+			
+			new Command("!song", "Whispers the link to the song Kappa",
 					"Use this to get a whisper with the link to the current song Kappa.") {
 
 				@Override
@@ -331,7 +378,9 @@ public final class CommandHandler {
 					user.sendWhisper("Current video: " + MessageHandler.getVideoLink());
 				}
 
-			}, new Command("!karma", "Shows you your current Karma", "Use this to get your current karma count.") {
+			},
+			
+			new Command("!karma", "Shows you your current Karma", "Use this to get your current karma count.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -339,7 +388,9 @@ public final class CommandHandler {
 							+ " You currently have " + user.getUserData().getKarma() + " karma.");
 				}
 
-			}, new Command("!points", "Shows your current clown points",
+			},
+			
+			new Command("!points", "Shows your current clown points",
 					"Use this to get your current clown point total.") {
 
 				@Override
@@ -348,7 +399,9 @@ public final class CommandHandler {
 							+ " You currently have " + user.getUserData().getPoints() + " clown points.");
 				}
 
-			}, new Command("!info", "Gives you more info about a command (and it's syntax).",
+			},
+			
+			new Command("!info", "Gives you more info about a command (and it's syntax).",
 					"Lets you view more information (!info <command>).") {
 
 				@Override
@@ -426,7 +479,7 @@ public final class CommandHandler {
 	 * @param message
 	 *            the <code>Message</code> container.
 	 */
-	public static void handleCommand(ServerConnection source, Message message) {
+	public static void handleCommand(ServerConnection source, Message message, boolean whisper) {
 		String command = message.message.toLowerCase().split(" ")[0].trim();
 		String preSplit = message.message.toLowerCase().replace(command + "", "").trim();
 		String[] args = preSplit.length() > 0 ? preSplit.split(" ") : new String[0];
@@ -473,6 +526,10 @@ public final class CommandHandler {
 		case VIEWER:
 			for (Command c : DEFAULT_VIEWER_COMMANDS) {
 				if (c.matches(command)) {
+					if (c.matches("register") && !whisper) {
+						user.sendWhisper("You can ONLY whisper this command to me.");
+						return;
+					}
 					System.out.println("Matched " + command + " to " + c.getWord());
 					c.handleCommand(user, args, preSplit);
 					return;
