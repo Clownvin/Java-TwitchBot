@@ -2,7 +2,6 @@ package com.clown.bot;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Calendar;
 
 import com.clown.bot.channel.Channel;
 import com.clown.bot.messaging.MessageHandler;
@@ -31,7 +30,7 @@ public final class TwitchBot {
 
 	private static final String[] AUTO_MESSAGES = new String[] { "Want to know more about what he's doing? Just ask.",
 			"Want to recommend a song? Just type it in chat.", "You can do !commands to get a list of commands.",
-			"Did you know: In this channel, you can play games with other users? !commands for details on how.",
+			"Did you know: In this channel, you can play games with other users? !gameguide for details on how.",
 			"You can play games with the other users! !commands to learn how." };
 	private static final long AUTO_MESSAGE_DELAY = 300000;
 
@@ -120,7 +119,6 @@ public final class TwitchBot {
 	 *             if an IOException was thrown for any reason.
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		System.out.println(Calendar.getInstance().getTimeInMillis());
 		try {
 			ircConnection = new ServerConnection(TWITCH_IRC_IP, TWITCH_IRC_PORT);
 			groupConnection = new ServerConnection(TWITCH_GROUP_IP, TWITCH_GROUP_PORT);
@@ -128,6 +126,7 @@ public final class TwitchBot {
 				ircConnection.joinChannel(DEFAULT_CHANNELS[i]);
 				groupConnection.joinChannel(DEFAULT_CHANNELS[i]);
 			}
+			ircConnection.sendMessage(DEFAULT_CHANNELS[0], "Hi!");
 			groupConnection.sendCommand("CAP REQ", ":twitch.tv/commands");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -138,7 +137,7 @@ public final class TwitchBot {
 			@Override
 			public void run() {
 				for (Channel channel : ircConnection.getChannelManager().getChannels()) {
-					ircConnection.sendMessage(channel.getChannel(), "Cya later!");
+					ircConnection.sendMessage(channel.getChannel(), "I'll be back... Kappa");
 				}
 			}
 

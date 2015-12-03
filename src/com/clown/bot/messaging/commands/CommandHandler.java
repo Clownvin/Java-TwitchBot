@@ -140,13 +140,11 @@ public final class CommandHandler {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
-					if (user != null) {
-						if (user.getUserData().isRegistered()) {
-							user.sendWhisper("You're already registered.");
-						} else {
-							user.getUserData().register();
-							user.sendWhisper("Thanks for registering!");
-						}
+					if (user.getUserData().isRegistered()) {
+						user.sendWhisper("You're already registered.");
+					} else {
+						user.getUserData().register();
+						user.sendWhisper("Thanks for registering!");
 					}
 				}
 
@@ -157,20 +155,20 @@ public final class CommandHandler {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
-					if (PollHandler.canStartPoll(user)) {
-						if (!PollHandler.pollActive()) {
-							if (message.length() > 3) {
-								PollHandler.startPoll(user.getUsername(), message);
-							} else {
-								user.sendWhisper(
-										"You must include a message about the about poll. What are the voting for?");
-							}
-						} else {
-							user.sendWhisper("You cannot start a poll while a poll is already taking place.");
-						}
-					} else {
+					if (!PollHandler.canStartPoll(user)) {
 						user.sendWhisper("You cannot start a poll. You need to either be a mod, or have "
 								+ PollHandler.getPollToll());
+						return;
+					}
+					if (PollHandler.pollActive()) {
+						user.sendWhisper("You cannot start a poll while a poll is already taking place.");
+						return;
+					}
+					if (message.length() > 3) {
+						PollHandler.startPoll(user.getUsername(), message);
+					} else {
+						user.sendWhisper(
+								"You must include a message about the about poll. What are the voting for?");
 					}
 				}
 
@@ -195,59 +193,51 @@ public final class CommandHandler {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
-					if (user.requestDelayPassed()) {
-						user.setRequestDelay(RequestHandler.REQUEST_DELAY);
-						if (RequestHandler.getRequest(user.getUsername()) != null) {
-							user.sendWhisper("You're already involved in a request.");
+					if (!user.requestDelayPassed()) {
+						return;
+					}
+					user.setRequestDelay(RequestHandler.REQUEST_DELAY);
+					if (RequestHandler.getRequest(user.getUsername()) != null) {
+						user.sendWhisper("You're already involved in a request.");
+						return;
+					}
+					if (args.length < 1) {
+						user.sendWhisper("You must specify a request. Example: \"invite tictactoe <USER>\"");
+						return;
+					}
+					switch (args[0]) {
+					case "reversi":
+					case "othello":
+					case "tictactoe":
+						if (GameManager.getSession(user.getUsername()) != null) {
+							user.sendWhisper("You're already in a game.");
 							return;
 						}
-						if (args.length > 0) {
-							System.out.println(args[0]);
-							switch (args[0]) {
-							case "reversi":
-							case "othello":
-							case "tictactoe":
-								if (GameManager.getSession(user.getUsername()) != null) {
-									user.sendWhisper("You're already in a game.");
-									break;
-								}
-								if (args.length > 1) {
-									if (TwitchBot.getIRCConnection().getUser(TwitchBot.DEFAULT_CHANNELS[0],
-											args[1]) != null) {
-										if (GameManager.getSession(user.getUsername()) != null
-												|| RequestHandler.getRequest(args[1]) != null) {
-											user.sendWhisper("The other user is currently busy.");
-											break;
-										} else {
-											RequestHandler
-													.addRequest(new Request(user.getUsername(), args[1], new Action() {
-
-												@Override
-												public void perform() {
-													GameManager.createSession(user.getUsername(), args[1], args[0]);
-												}
-
-											}));
-											user.sendWhisper("Sending request...");
-											TwitchBot.getGroupConnection().sendWhisper(args[1],
-													user.getUsername() + " would like to play " + args[0]
-															+ " with you. Use !accept or !decline.");
-										}
-
-									} else {
-										user.sendWhisper("That user isn't currently registed in my channel lists.");
-									}
-								} else {
-									user.sendWhisper("You need to specify a user to play against.");
-								}
-								break;
-							default:
-								user.sendWhisper(args[0] + " is not a game currently supported.");
-								user.sendWhisper("Currently avaible games are: Tictactoe, Othello (reversi)");
-							}
-						} else {
-							user.sendWhisper("You must specify a request. Example: \"invite tictactoe <USER>\"");
+						if (args.length < 2) {
+							user.sendWhisper("You need to specify a user to play against.");
+							return;
 						}
+						if (TwitchBot.getIRCConnection().getUser(TwitchBot.DEFAULT_CHANNELS[0],
+								args[1]) == null) {
+							user.sendWhisper("That user isn't currently registed in my channel lists.");
+							return;
+						}
+						if (GameManager.getSession(user.getUsername()) != null
+								|| RequestHandler.getRequest(args[1]) != null) {
+							user.sendWhisper("The other user is currently busy.");
+							return;
+						}
+						RequestHandler.addRequest(new Request(user.getUsername(), args[1], new Action() {
+
+							@Override
+							public void perform() {
+								GameManager.createSession(user.getUsername(), args[1], args[0]);
+							}
+						}));
+						user.sendWhisper("Sending request...");
+						TwitchBot.getGroupConnection().sendWhisper(args[1],
+								user.getUsername() + " would like to play " + args[0]
+										+ " with you. Use !accept or !decline.");
 					}
 				}
 
@@ -258,15 +248,15 @@ public final class CommandHandler {
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
 					Request request = RequestHandler.getRequest(user.getUsername());
-					if (request != null) {
-						if (request.getTo().equalsIgnoreCase(user.getUsername())) {
-							request.accept();
-						} else {
-							user.sendWhisper("You can accept your own invitation! :3");
-						}
-					} else {
+					if (request == null) {
 						user.sendWhisper("You don't currently have a pending invitation.");
+						return;
 					}
+					if (!request.getTo().equalsIgnoreCase(user.getUsername())) {
+						user.sendWhisper("You can't accept an invitation you sent!");
+						return;
+					}
+					request.accept();
 				}
 
 			},
@@ -296,6 +286,19 @@ public final class CommandHandler {
 					} else {
 						user.sendWhisper("You're not currently in a game.");
 					}
+				}
+
+			},
+			
+			new Command("!gameguide", "Relays information abouts games to you.",
+					"Lets you view information about chat games.") {
+
+				@Override
+				public void handleCommand(User user, String[] args, String message) {
+					user.sendWhisper("This channel allows you to play games with other users! There are currently two games available, tic tac toe and othello.");
+					user.sendWhisper("To invite someone to a game, use !invite <game> <user>. To accept an invitation, use !accept. To decline or revoke an invitation, use !decline.");
+					user.sendWhisper("The games themselves are played out in whispers, like these messages. The board is sent 1 line at a time. You must use the command !move <#> to make a move.");
+					user.sendWhisper("Because I have to throttle my whisper speed, I cannot resend the board after your turn is over. You can however use !move resendboard to view the board again.");
 				}
 
 			},
