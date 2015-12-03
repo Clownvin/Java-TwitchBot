@@ -20,7 +20,7 @@ public final class CommandHandler {
 
 	private static final Command[] DEFAULT_MOD_COMMANDS = new Command[] {
 			
-			new Command("!setsong", "Sets the current song link", "Use this to set the current song link.") {
+			new Command("!setsong", "Use this to set the current song link.") {
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
 					if (args.length == 1) {
@@ -34,7 +34,7 @@ public final class CommandHandler {
 				}
 			}, 
 			
-			new Command("!sendmessage", "Sends a message to a specific destination",
+			new Command("!sendmessage",
 					"Sends a message to a destination (!sendmessage <dest> <message>).") {
 
 				@Override
@@ -70,7 +70,7 @@ public final class CommandHandler {
 
 			}, 
 			
-			new Command("!regexoff", "Sets regex to off", "Use this to set regex off.") {
+			new Command("!regexoff", "Use this to set regex off.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -80,7 +80,7 @@ public final class CommandHandler {
 				}
 			}, 
 			
-			new Command("!regexon", "Sets regex to on", "Use this to set regex on.") {
+			new Command("!regexon", "Use this to set regex on.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -91,7 +91,7 @@ public final class CommandHandler {
 
 			}, 
 			
-			new Command("!moderateoff", "Sets moderate to off", "Use this to set moderate off.") {
+			new Command("!moderateoff", "Use this to set moderate off.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -101,7 +101,7 @@ public final class CommandHandler {
 				}
 			},
 			
-			new Command("!moderateon", "Sets moderate to on", "Use this to set moderate on.") {
+			new Command("!moderateon", "Use this to set moderate on.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -111,7 +111,7 @@ public final class CommandHandler {
 				}
 			},
 			
-			new Command("!registon", "A mode, for spammers.", "Turns A mode on.") {
+			new Command("!registon", "Turns registered only mode on.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -121,7 +121,7 @@ public final class CommandHandler {
 				}
 			},
 			
-			new Command("!registoff", "Turns off registeredOnly mode", "Turns registeredOnly mode off.") {
+			new Command("!registoff", "Turns registered only mode off.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -135,7 +135,7 @@ public final class CommandHandler {
 	private static final Command[] DEFAULT_GLOBAL_MOD_COMMANDS = new Command[] {};
 	private static final Command[] DEFAULT_VIEWER_COMMANDS = new Command[] {
 			
-			new Command("!register", "Registers you. You MUST whisper this command to me.",
+			new Command("!register",
 					"Registers you. You MUST whisper this command to me. Usage: /w ElNighthawk !register") {
 
 				@Override
@@ -150,7 +150,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!startpoll", "Use this to start a poll in the channel",
+			new Command("!startpoll",
 					"Allows you to start a poll (!startpoll <polldesc> : <option1> <option2>..<optionN>).") {
 
 				@Override
@@ -174,8 +174,7 @@ public final class CommandHandler {
 
 			}, 
 			
-			new Command("!pollinfo", "Allows you to see the current poll info",
-					"Use this to get the current poll info sent to you.") {
+			new Command("!pollinfo", "Use this to get the current poll info sent to you.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -188,8 +187,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!invite", "Allows you to invite other viewers into a game",
-					"Use this to invite others to games (!invite <game> <user>).") {
+			new Command("!invite", "Use this to invite others to games (!invite <game> <user>).") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -243,7 +241,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!accept", "Lets you accept an invitation", "Use this to accept any invites you recieve.") {
+			new Command("!accept", "Use this to accept any invites you recieve.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -261,7 +259,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!decline", "Lets you decline an invitation", "Use this to decline invitations.") {
+			new Command("!decline", "Use this to decline invitations.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -275,8 +273,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!move", "Allows you to make a move while in a game",
-					"Lets you make a move in a game. Typical usage: !move <num>") {
+			new Command("!move", "Lets you make a move in a game. Typical usage: !move <num>") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -290,8 +287,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!gameguide", "Relays information abouts games to you.",
-					"Lets you view information about chat games.") {
+			new Command("!gameguide", "Lets you view information about chat games.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -303,7 +299,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!commands", "Lets you see this list", "I don't think you need info on this one lol.") {
+			new Command("!commands", "I don't think you need info on this one Kappa.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -313,7 +309,7 @@ public final class CommandHandler {
 					switch (user.getType()) {
 					case MODERATOR:
 						for (Command c : DEFAULT_MOD_COMMANDS) {
-							currentList += c.getWord() + " - " + c.getDescription() + ", ";
+							currentList += c.getWord() + ", ";
 							if (currentList.length() > messageLength) {
 								commandLists.add(currentList);
 								currentList = "Commands cont: ";
@@ -321,7 +317,7 @@ public final class CommandHandler {
 						}
 					case STAFF:
 						for (Command c : DEFAULT_STAFF_COMMANDS) {
-							currentList += c.getWord() + " - " + c.getDescription() + ", ";
+							currentList += c.getWord() + ", ";
 							if (currentList.length() > messageLength) {
 								commandLists.add(currentList);
 								currentList = "Commands cont: ";
@@ -329,7 +325,7 @@ public final class CommandHandler {
 						}
 					case ADMIN:
 						for (Command c : DEFAULT_ADMIN_COMMANDS) {
-							currentList += c.getWord() + " - " + c.getDescription() + ", ";
+							currentList += c.getWord() + ", ";
 							if (currentList.length() > messageLength) {
 								commandLists.add(currentList);
 								currentList = "Commands cont: ";
@@ -337,7 +333,7 @@ public final class CommandHandler {
 						}
 					case GLOBAL_MOD:
 						for (Command c : DEFAULT_GLOBAL_MOD_COMMANDS) {
-							currentList += c.getWord() + " - " + c.getDescription() + ", ";
+							currentList += c.getWord() + ", ";
 							if (currentList.length() > messageLength) {
 								commandLists.add(currentList);
 								currentList = "Commands cont: ";
@@ -345,14 +341,14 @@ public final class CommandHandler {
 						}
 					case VIEWER:
 						for (Command c : DEFAULT_VIEWER_COMMANDS) {
-							currentList += c.getWord() + " - " + c.getDescription() + ", ";
+							currentList += c.getWord() + ", ";
 							if (currentList.length() > messageLength) {
 								commandLists.add(currentList);
 								currentList = "Commands cont: ";
 							}
 						}
 						for (Command c : temporaryCommands) {
-							currentList += c.getWord() + " - " + c.getDescription() + ", ";
+							currentList += c.getWord() + ", ";
 							if (currentList.length() > messageLength) {
 								commandLists.add(currentList);
 								currentList = "Commands cont: ";
@@ -362,6 +358,7 @@ public final class CommandHandler {
 							commandLists.add(currentList);
 						}
 					}
+					user.sendWhisper("Use !info <command> to get more information.");
 					if (commandLists.size() > 0) {
 						for (String commandList : commandLists) {
 							user.sendWhisper(commandList);
@@ -373,8 +370,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!song", "Whispers the link to the song Kappa",
-					"Use this to get a whisper with the link to the current song Kappa.") {
+			new Command("!song", "Use this to get a whisper with the link to the current song Kappa.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -383,7 +379,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!karma", "Shows you your current Karma", "Use this to get your current karma count.") {
+			new Command("!karma", "Use this to get your current karma count.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -393,8 +389,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!points", "Shows your current clown points",
-					"Use this to get your current clown point total.") {
+			new Command("!points", "Use this to get your current clown point total.") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {
@@ -404,8 +399,7 @@ public final class CommandHandler {
 
 			},
 			
-			new Command("!info", "Gives you more info about a command (and it's syntax).",
-					"Lets you view more information (!info <command>).") {
+			new Command("!info", "Lets you view more information (!info <command>).") {
 
 				@Override
 				public void handleCommand(User user, String[] args, String message) {

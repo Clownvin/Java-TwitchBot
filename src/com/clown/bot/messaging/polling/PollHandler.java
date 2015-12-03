@@ -19,8 +19,7 @@ public final class PollHandler {
 		return pollInfo;
 	}
 
-	private static final Command YAY_COMMAND = new Command("!yay", "Casts \"YAY\" vote.",
-			"Use this to cast a \"yay\" vote.") {
+	private static final Command YAY_COMMAND = new Command("!yay", "Use this to cast a \"yay\" vote.") {
 
 		@Override
 		public void handleCommand(User user, String[] args, String message) {
@@ -28,8 +27,7 @@ public final class PollHandler {
 		}
 
 	};
-	private static final Command NAY_COMMAND = new Command("!nay", "Casts \"NAY\" vote.",
-			"Use this to cast a \"nay\" vote.") {
+	private static final Command NAY_COMMAND = new Command("!nay", "Use this to cast a \"nay\" vote.") {
 
 		@Override
 		public void handleCommand(User user, String[] args, String message) {
@@ -145,8 +143,7 @@ public final class PollHandler {
 				for (String command : split[1].split(" ")) {
 					System.out.println("Command: " + command);
 					if (command.length() > 0) {
-						tempCommands.add(new Command("!" + command, "Casts \"" + command + "\" vote.",
-								"Use this to cast a \"" + command + "\" vote.") {
+						tempCommands.add(new Command("!" + command, "Use this to cast a \"" + command + "\" vote.") {
 
 							@Override
 							public void handleCommand(User user, String[] args, String message) {
