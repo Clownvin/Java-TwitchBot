@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/calvin/Desktop/java/TwitchIRCBot/ClownLib.jar"/>
+	<classpathentry kind="lib" path="deps/ClownLib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
