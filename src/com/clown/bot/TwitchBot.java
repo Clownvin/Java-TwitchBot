@@ -86,8 +86,8 @@ public final class TwitchBot {
 			for (int i = 0; i < DEFAULT_CHANNELS.length; i++) {
 				ircConnection.joinChannel(DEFAULT_CHANNELS[i]);
 				groupConnection.joinChannel(DEFAULT_CHANNELS[i]);
+				ircConnection.sendMessage(DEFAULT_CHANNELS[i], "Hi!");
 			}
-			ircConnection.sendMessage(DEFAULT_CHANNELS[0], "Hi!");
 			groupConnection.sendCommand("CAP REQ", ":twitch.tv/commands");
 		} catch (IOException e) {
 			e.printStackTrace();
