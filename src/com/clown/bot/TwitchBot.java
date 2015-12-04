@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import com.clown.bot.channel.Channel;
+import com.clown.bot.games.TwitchPlaysFrozenDepths;
 import com.clown.bot.server.ServerConnection;
 
 /**
@@ -93,6 +94,7 @@ public final class TwitchBot {
 			e.printStackTrace();
 			System.exit(1);
 		}
+		TwitchPlaysFrozenDepths.startPlay();
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 
 			@Override

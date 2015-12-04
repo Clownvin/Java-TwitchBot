@@ -149,6 +149,18 @@ public final class CommandHandler {
 	private static final Command[] DEFAULT_GLOBAL_MOD_COMMANDS = new Command[] {};
 	private static final Command[] DEFAULT_VIEWER_COMMANDS = new Command[] {
 			
+			new Command("!keybinds", "Sends you a link to current game keybinds.") {
+				@Override
+				public void handleCommand(User user, String[] args, String message) {
+					user.sendWhisper("http://pastebin.com/xhzjr0Ly");
+				}
+			},
+			new Command("!tutorial", "Send you a link to current game tutorial.") {
+				@Override
+				public void handleCommand(User user, String[] args, String message) {
+					user.sendWhisper("http://imgur.com/a/gRBi8");
+				}
+			},
 			new Command("!register",
 					"Registers you. You MUST whisper this command to me. Usage: /w ElNighthawk !register") {
 
@@ -501,6 +513,9 @@ public final class CommandHandler {
 			return;
 		}
 		System.out.println("Command: " + command + ", arglength: " + args.length);
+		if (command.startsWith("!#")) { //TP Command
+			PollHandler.register(user, command.replace("!#", ""));
+		}
 		switch (user.getType()) {
 		case MODERATOR:
 			for (Command c : DEFAULT_MOD_COMMANDS) {

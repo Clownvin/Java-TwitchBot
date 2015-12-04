@@ -36,7 +36,7 @@ public final class MessageHandler {
 		public void run() {
 			while (!TwitchBot.killIssued()) {
 				try {
-					Thread.sleep(3600000 / (6 * autoMessages.size()));
+					Thread.sleep(3600000 / (6 * autoMessages.size())); // 60 minutes in milliseconds divided by 6 * amount of autoMessages. So that each message is displayed 6 times per hour.
 					for (User user : TwitchBot.getIRCConnection().getChannelManager().getChannel(TwitchBot.DEFAULT_CHANNELS[0])
 							.getViewerList()) {
 						user.getUserData().addPoints(1);
@@ -75,8 +75,8 @@ public final class MessageHandler {
 	static {
 		AUTO_MESSAGE_THREAD.start();
 		NEW_FOLLOWER_CHECKER.start();
-		autoMessages.add("Want to know more about what he's doing? Just ask.");
 		autoMessages.add("You can do !commands to get a list of commands.");
+		autoMessages.add("You can whipser all your commands to me! (/w "+TwitchBot.DEFAULT_NICKNAME+" !commands)");
 		autoMessages.add("Did you know: In this channel, you can play games with other users? !gameguide for details on how.");
 	}
 

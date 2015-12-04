@@ -15,6 +15,10 @@ public abstract class Command extends Word {
 		return info;
 	}
 
+	public boolean hasAccess(User user) {
+		return true; // Return true by default. Some commands may override.
+	}
+
 	public abstract void handleCommand(User user, String args[], String message);
 
 	@Override

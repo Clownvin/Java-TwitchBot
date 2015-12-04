@@ -3,8 +3,10 @@ package com.clown.bot.messaging.polling;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import com.clown.bot.TwitchBot;
+import com.clown.bot.games.TwitchPlaysFrozenDepths;
 import com.clown.bot.messaging.commands.Command;
 import com.clown.bot.messaging.commands.CommandHandler;
 import com.clown.bot.user.User;
@@ -36,8 +38,11 @@ public final class PollHandler {
 
 	};
 
-	private static final long POLL_DURATION = 120000; // 2 minutes.
+	private static final long POLL_DURATION = 30000; // 30 seconds.
 	private static volatile boolean pollActive = false;
+	private static volatile boolean gamePoll = false;
+	
+	private static final Pattern INPUT_PATTERN = Pattern.compile("((([a-z]{1}+)|([0-9]{1}+)|(\\.)|(shift)|(enter)|(space)|(up)|(down)|(left)|(right)))(\\+((([a-z]{1}+)|([0-9]{1}+)|(\\.)|(shift)|(enter)|(space)|(up)|(down)|(left)|(right))))*");
 
 	private static ArrayList<String> votedUsers = new ArrayList<String>();
 	private static ArrayList<String> votes = new ArrayList<String>();
@@ -52,6 +57,10 @@ public final class PollHandler {
 	}
 
 	public static void register(User user, String vote) {
+		if (gamePoll && !INPUT_PATTERN.matcher(vote.toLowerCase()).matches()) {
+			user.sendWhisper("That's not the correct format. Ex. !#w+.");
+			return;
+		}
 		if (!alreadyVoted(user.getUsername())) {
 			user.sendWhisper("Vote registered.");
 			votedUsers.add(user.getUsername());
@@ -80,7 +89,7 @@ public final class PollHandler {
 					}
 					// Poll has ended.
 					TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0],
-							"The poll has ended. Results:");
+							"Sending input:");
 					Hashtable<String, Integer> voteCounts = new Hashtable<String, Integer>();
 					for (String vote : votes) {
 						if (voteCounts.containsKey(vote)) {
@@ -90,8 +99,17 @@ public final class PollHandler {
 						}
 					}
 					String results = "";
+					int highestCount = 0;
+					String highestResult = "";
 					for (String key : voteCounts.keySet()) {
-						results += key + ": " + voteCounts.get(key) + " ";
+						if (voteCounts.get(key) > highestCount) {
+							highestCount = voteCounts.get(key);
+							highestResult = key;
+							results = highestResult;
+						}
+					}
+					if (gamePoll) {
+						TwitchPlaysFrozenDepths.sendInput(highestResult);
 					}
 					TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0], results);
 					for (Command command : tempCommands) {
@@ -101,6 +119,7 @@ public final class PollHandler {
 					votes.clear();
 					tempCommands.clear();
 					pollActive = false;
+					gamePoll = false;
 				}
 				synchronized (this) {
 					try {
@@ -126,6 +145,18 @@ public final class PollHandler {
 
 	public static boolean canStartPoll(User user) {
 		return user.getType() == UserType.MODERATOR || user.getUserData().getPoints() >= pollToll;
+	}
+	
+	public static void startTPPoll() {
+		TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0], "Polling for input. Use !# followed by input.");
+		TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0], "Ex. !#up, !#shift+g, !#space, !#g");
+		TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0], "!keybinds for keybinds, !tutorial for game tutorial");
+		pollActive = true;
+		gamePoll = true;
+		pollInfo = "Gathering move input.";
+		synchronized (POLL_MANAGER) {
+			POLL_MANAGER.notifyAll();
+		}
 	}
 
 	public static void startPoll(String user, String message) {
