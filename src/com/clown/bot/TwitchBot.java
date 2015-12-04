@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import com.clown.bot.channel.Channel;
-import com.clown.bot.messaging.MessageHandler;
 import com.clown.bot.server.ServerConnection;
-import com.clown.bot.user.User;
 
 /**
  * 
@@ -25,7 +23,7 @@ public final class TwitchBot {
 	public static final String DEFAULT_NICKNAME = "ElNighthawk";
 	public static final String DEFAULT_INDENTITY = "ElNighthawk";
 	public static final String DEFAULT_REALNAME = "ElNighthawk";
-	public static final String[] DEFAULT_CHANNELS = { "#vavbro", "#codematrix159" };
+	public static final String[] DEFAULT_CHANNELS = { "#vavbro" };
 	public static final String DEFAULT_OAUTH = Messages.getString("TwitchIRCBot.5");
 
 	private static ServerConnection ircConnection;
