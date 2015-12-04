@@ -1,7 +1,6 @@
 package com.clown.bot.messaging;
 
 import java.util.ArrayList;
-
 import com.clown.bot.TwitchBot;
 import com.clown.bot.messaging.commands.CommandHandler;
 import com.clown.bot.regex.BotRegex;
