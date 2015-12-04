@@ -54,14 +54,30 @@ public final class MessageHandler {
 		}
 	};
 
+	private static final Thread NEW_FOLLOWER_CHECKER = new Thread() {
+		@Override
+		public void run() {
+			while (!TwitchBot.killIssued()) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					continue; // For performance reasons, if something was interrupting often, could cause lag.
+				}
+				if (checkForNewFollower()) {
+					TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0], "Thanks for following, "+lastFollower+"!");
+				}
+			}
+		}
+	};
+
 
 	//Messages should be delayed such that all messages are sent 6 times per hour (once every 10 minutes)
 	static {
 		AUTO_MESSAGE_THREAD.start();
+		NEW_FOLLOWER_CHECKER.start();
 		autoMessages.add("Want to know more about what he's doing? Just ask.");
 		autoMessages.add("You can do !commands to get a list of commands.");
 		autoMessages.add("Did you know: In this channel, you can play games with other users? !gameguide for details on how.");
-		checkForNewFollower();
 	}
 
 	public static boolean checkForNewFollower() {
