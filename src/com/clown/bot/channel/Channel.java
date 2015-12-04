@@ -8,8 +8,11 @@ import com.clown.bot.user.User;
 import com.clown.bot.user.UserType;
 import com.clown.io.BasicIO;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 /**
- * 
+ *
  * @author Calvin Channel is a container object for information about channels
  *         and their users.
  */
@@ -20,7 +23,7 @@ public final class Channel {
 
 	/**
 	 * Constructor for a new Channel object.
-	 * 
+	 *
 	 * @param channel
 	 *            the name of the channel this object represents.
 	 */
@@ -31,7 +34,7 @@ public final class Channel {
 
 	/**
 	 * Allows access to the String name of the channel.
-	 * 
+	 *
 	 * @return the channel name.
 	 */
 	public String getChannel() {
@@ -41,7 +44,7 @@ public final class Channel {
 	/**
 	 * Allows access to the randomly generated color of the channel (this has no
 	 * meaning except for creating GUIs)
-	 * 
+	 *
 	 * @return the color of the channel.
 	 */
 	public Color getColor() {
@@ -50,7 +53,7 @@ public final class Channel {
 
 	/**
 	 * Allows access to the list of users.
-	 * 
+	 *
 	 * @return the viewerList object.
 	 */
 	public ArrayList<User> getViewerList() {
@@ -67,60 +70,45 @@ public final class Channel {
 		} catch (Exception e) {
 			System.err.println("Exception reading channel userlist.");
 		}
-		if (jsonPage != null) {
-			ArrayList<User> parsedUsers = new ArrayList<User>();
-			String[] lines = jsonPage.replace("\r", "").split("\n");
-			int state = 0; // MODS: 1, STAFF: 2, ADMINS: 3, GMODS: 4, VIEWERS: 5
-			for (int i = 0; i < lines.length; i++) {
-				lines[i] = lines[i].trim();
-				if (lines[i].startsWith("\"moderators\"")) {
-					state = 1;
-					continue;
-				}
-				if (lines[i].startsWith("\"staff\"")) {
-					state = 2;
-					continue;
-				}
-				if (lines[i].startsWith("\"admins\"")) {
-					state = 3;
-					continue;
-				}
-				if (lines[i].startsWith("\"global_mods\"")) {
-					state = 4;
-					continue;
-				}
-				if (lines[i].startsWith("\"viewers\"")) {
-					state = 5;
-					continue;
-				}
-				if (lines[i].endsWith("],") || lines[i].endsWith("]") || lines[i].contains("}")) {
-					state = 0;
-					continue;
-				}
-				switch (state) {
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-					parsedUsers.add(new User(lines[i].trim().replace("\"", "").replace(",", ""),
-							UserType.getTypeForState(state)));
-					break;
-				}
+		if (jsonPage == null) {
+			System.out.println("JSON was null for channel "+channel);
+			return;
+		}
+		JSONObject chattersObject = new JSONObject(jsonPage).getJSONObject("chatters");
+		JSONArray modArray = chattersObject.getJSONArray("moderators");
+		JSONArray staffArray = chattersObject.getJSONArray("staff");
+		JSONArray adminArray = chattersObject.getJSONArray("admins");
+		JSONArray globalModArray = chattersObject.getJSONArray("global_mods");
+		JSONArray viewerArray = chattersObject.getJSONArray("viewers");
+		ArrayList<User> parsedUsers = new ArrayList<User>();
+		
+		for (int i = 0; i < modArray.length(); i++) {
+			parsedUsers.add(new User(modArray.getString(i), UserType.MODERATOR));
+		}
+		for (int i = 0; i < staffArray.length(); i++) {
+			parsedUsers.add(new User(staffArray.getString(i), UserType.STAFF));
+		}
+		for (int i = 0; i < adminArray.length(); i++) {
+			parsedUsers.add(new User(adminArray.getString(i), UserType.ADMIN));
+		}
+		for (int i = 0; i < globalModArray.length(); i++) {
+			parsedUsers.add(new User(globalModArray.getString(i), UserType.GLOBAL_MOD));
+		}
+		for (int i = 0; i < viewerArray.length(); i++) {
+			parsedUsers.add(new User(viewerArray.getString(i), UserType.VIEWER));
+		}
+		for (int i = 0; i < parsedUsers.size(); i++) {
+			if (!viewerList.contains(parsedUsers.get(i))) {
+				parsedUsers.get(i).loadUserData();
+				System.out.println("User joined [" + channel + "]: " + parsedUsers.get(i).getUsername()+" of type "+parsedUsers.get(i).getType());
+				viewerList.add(parsedUsers.get(i));
 			}
-			for (int i = 0; i < parsedUsers.size(); i++) {
-				if (!viewerList.contains(parsedUsers.get(i))) {
-					parsedUsers.get(i).loadUserData();
-					System.out.println("User joined [" + channel + "]: " + parsedUsers.get(i).getUsername()+" of type "+parsedUsers.get(i).getType());
-					viewerList.add(parsedUsers.get(i));
-				}
-			}
-			for (int i = 0; i < viewerList.size(); i++) {
-				if (!parsedUsers.contains(viewerList.get(i))) {
-					viewerList.get(i).save();
-					System.out.println("User left [" + channel + "]: " + viewerList.get(i).getUsername());
-					viewerList.remove(i);
-				}
+		}
+		for (int i = 0; i < viewerList.size(); i++) {
+			if (!parsedUsers.contains(viewerList.get(i))) {
+				viewerList.get(i).save();
+				System.out.println("User left [" + channel + "]: " + viewerList.get(i).getUsername());
+				viewerList.remove(i);
 			}
 		}
 	}
