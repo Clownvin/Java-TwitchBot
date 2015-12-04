@@ -1,5 +1,7 @@
 package com.clown.bot.messaging;
 
+import java.util.ArrayList;
+
 import com.clown.bot.TwitchBot;
 import com.clown.bot.messaging.commands.CommandHandler;
 import com.clown.bot.regex.BotRegex;
@@ -18,6 +20,49 @@ public final class MessageHandler {
 	// !chatter and only if he has used !chatter he can chat, way better then
 	// "a" infront of everything
 	private static boolean registeredOnly = false;
+	
+	private static final ArrayList<String> autoMessages = new ArrayList<String>();
+	private static int counter = 0;
+	
+	/**
+	 * Sends a message from the AUTO_MESSAGE list every 5 minutes. Also adds
+	 * clown points to currently logged in users.
+	 */
+	private static final Thread AUTO_MESSAGE_THREAD = new Thread() {
+		@Override
+		public void run() {
+			while (!TwitchBot.killIssued()) {
+				try {
+					Thread.sleep(3600000 / (6 * autoMessages.size()));
+					for (User user : TwitchBot.getIRCConnection().getChannelManager().getChannel(TwitchBot.DEFAULT_CHANNELS[0])
+							.getViewerList()) {
+						user.getUserData().addPoints(1);
+					}
+				} catch (InterruptedException e) {
+				}
+				if (MessageHandler.isRegisteredOnly()) {
+					TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0],
+							"Registered-only chat is currently active. You must !register by whispering the command to me.");
+				} else {
+					TwitchBot.getIRCConnection().sendMessage(TwitchBot.DEFAULT_CHANNELS[0], autoMessages.get(counter++));
+					counter %= autoMessages.size();
+				}
+			}
+		}
+	};
+	
+	
+	//Messages should be delayed such that all messages are sent 6 times per hour (once every 10 minutes)
+	static {
+		AUTO_MESSAGE_THREAD.start();
+		autoMessages.add("Want to know more about what he's doing? Just ask.");
+		autoMessages.add("You can do !commands to get a list of commands.");
+		autoMessages.add("Did you know: In this channel, you can play games with other users? !gameguide for details on how.");
+	}
+	
+	public static void addAutoMessage(String autoMessage) {
+		autoMessages.add(autoMessage);
+	}
 
 	public static void setVideoLink(String link) {
 		videoLink = link;

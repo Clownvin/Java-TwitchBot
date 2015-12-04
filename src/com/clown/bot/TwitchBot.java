@@ -25,48 +25,11 @@ public final class TwitchBot {
 	public static final String DEFAULT_NICKNAME = "ElNighthawk";
 	public static final String DEFAULT_INDENTITY = "ElNighthawk";
 	public static final String DEFAULT_REALNAME = "ElNighthawk";
-	public static final String[] DEFAULT_CHANNELS = { "#vavbro" };
+	public static final String[] DEFAULT_CHANNELS = { "#vavbro", "#codematrix159" };
 	public static final String DEFAULT_OAUTH = Messages.getString("TwitchIRCBot.5");
-
-	private static final String[] AUTO_MESSAGES = new String[] { "Want to know more about what he's doing? Just ask.",
-			"Want to recommend a song? Just type it in chat.", "You can do !commands to get a list of commands.",
-			"Did you know: In this channel, you can play games with other users? !gameguide for details on how.",
-			"You can play games with the other users! !commands to learn how." };
-	private static final long AUTO_MESSAGE_DELAY = 300000;
 
 	private static ServerConnection ircConnection;
 	private static ServerConnection groupConnection;
-
-	/**
-	 * Sends a message from the AUTO_MESSAGE list every 5 minutes. Also adds
-	 * clown points to currently logged in users.
-	 */
-	private static final Thread AUTO_MESSAGE_THREAD = new Thread() {
-		@Override
-		public void run() {
-			while (!killIssued) {
-				try {
-					Thread.sleep(AUTO_MESSAGE_DELAY);
-					for (User user : ircConnection.getChannelManager().getChannel(DEFAULT_CHANNELS[0])
-							.getViewerList()) {
-						user.getUserData().addPoints(1);
-					}
-				} catch (InterruptedException e) {
-				}
-				if (MessageHandler.isRegisteredOnly()) {
-					ircConnection.sendMessage(DEFAULT_CHANNELS[0],
-							"Registered-only chat is currently active. You must !register by whispering the command to me.");
-				} else {
-					ircConnection.sendMessage(DEFAULT_CHANNELS[0],
-							AUTO_MESSAGES[(int) (Math.random() * AUTO_MESSAGES.length)]);
-				}
-			}
-		}
-	};
-
-	static {
-		AUTO_MESSAGE_THREAD.start();
-	}
 
 	private static boolean killIssued = false;
 

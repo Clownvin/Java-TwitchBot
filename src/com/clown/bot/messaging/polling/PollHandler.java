@@ -89,7 +89,7 @@ public final class PollHandler {
 							voteCounts.put(vote, 1);
 						}
 					}
-					String results = "Results: ";
+					String results = "";
 					for (String key : voteCounts.keySet()) {
 						results += key + ": " + voteCounts.get(key) + " ";
 					}

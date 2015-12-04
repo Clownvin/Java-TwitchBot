@@ -34,6 +34,20 @@ public final class CommandHandler {
 				}
 			}, 
 			
+			new Command("!addautomessage", "Use this to add auto messages.") {
+				@Override
+				public void handleCommand(User user, String[] args, String message) {
+					if (args.length > 0) {
+						MessageHandler.addAutoMessage(message);
+						user.sendWhisper(
+								BotRegex.getAffirmatives()[(int) (Math.random() * BotRegex.getAffirmatives().length)]);
+					} else {
+						user.sendWhisper(
+								"You must include a message after the command.");
+					}
+				}
+			}, 
+			
 			new Command("!sendmessage",
 					"Sends a message to a destination (!sendmessage <dest> <message>).") {
 
