@@ -15,7 +15,7 @@ import com.clown.io.BasicIO;
 import com.clown.util.Util;
 
 /**
- * 
+ *
  * @author Calvin
  *
  *         This class is the true "main" object. Everything revolves around this
@@ -31,34 +31,29 @@ public final class ServerConnection extends Thread {
 
 	private final ChannelManager channelManager = new ChannelManager();
 
-	private volatile ArrayList<String> users = new ArrayList<String>();
-
 	private volatile ArrayList<String> messages = new ArrayList<String>();
 
 	/**
 	 * This throttles the output of whisper messages, so that the bot doesn't
 	 * get notifications about being too fast.
 	 */
-	private final Thread whisperThrottler = new Thread() {
+	private final Thread messageThrottler = new Thread() {
 		@Override
 		public void run() {
 			while (!TwitchBot.killIssued()) {
 				try {
-					Thread.sleep(400); // Sleep for 400MS before sending the
-					// next message.
+					Thread.sleep(333); // About 90 messages every 30 seconds MAX.
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					continue; // If it's interrupted, we can't risk getting banned by overstepping out rate.
 				}
-				if (users.size() > 0) {
-					String user = "";
-					String message = "";
-					synchronized (users) {
-						user = users.remove(0);
-					}
-					synchronized (messages) {
-						message = messages.remove(0);
-					}
-					sendMessage(TwitchBot.DEFAULT_CHANNELS[0], "/w " + user + " " + message);
+				if (messages.size() < 1) {
+					continue;
+				}
+				try {
+					output.write(Util.toBytes(messages.remove(0) + "\r\n"));
+					output.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -66,7 +61,7 @@ public final class ServerConnection extends Thread {
 
 	/**
 	 * Constructor for a new instance of server connection.
-	 * 
+	 *
 	 * @param ip
 	 *            IP of the server to connect to.
 	 * @param port
@@ -87,7 +82,7 @@ public final class ServerConnection extends Thread {
 			throw e;
 		}
 		establishConnection();
-		whisperThrottler.start();
+		messageThrottler.start();
 		start();
 	}
 
@@ -103,7 +98,7 @@ public final class ServerConnection extends Thread {
 
 	/**
 	 * Allows other objects to get the channel manager.
-	 * 
+	 *
 	 * @return the current channelManager object.
 	 */
 	public ChannelManager getChannelManager() {
@@ -113,7 +108,7 @@ public final class ServerConnection extends Thread {
 	/**
 	 * Allows other objects to obtain the <code>User</code> object for a certain
 	 * user.
-	 * 
+	 *
 	 * @param channel
 	 *            channel of the user.
 	 * @param username
@@ -132,7 +127,7 @@ public final class ServerConnection extends Thread {
 	/**
 	 * First step in interpreting input from the input stream. Directs the
 	 * message to where it needs to go based on its command.
-	 * 
+	 *
 	 * @param line
 	 *            line of input to process.
 	 */
@@ -156,7 +151,7 @@ public final class ServerConnection extends Thread {
 	/**
 	 * Sends a JOIN command for the channel requested. Upon joining, input and
 	 * output between this channel will be possible.
-	 * 
+	 *
 	 * @param channel
 	 *            the channel to join.
 	 */
@@ -183,7 +178,7 @@ public final class ServerConnection extends Thread {
 
 	/**
 	 * Sends a command with the message provided through the output stream.
-	 * 
+	 *
 	 * @param command
 	 *            command to send.
 	 * @param message
@@ -191,19 +186,14 @@ public final class ServerConnection extends Thread {
 	 * @return true if everything goes smoothly, false if else.
 	 */
 	public boolean sendCommand(String command, String message) {
-		try {
-			output.write(Util.toBytes(command + " " + message + "\r\n"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+		messages.add(command + " " + message);
 		return true;
 	}
 
 	/**
 	 * Sends a message to a channel. Converts the String to bytes and sends them
 	 * through the output stream.
-	 * 
+	 *
 	 * @param channel
 	 *            the channel to send the message on.
 	 * @param message
@@ -212,14 +202,7 @@ public final class ServerConnection extends Thread {
 	 */
 	public synchronized boolean sendMessage(String channel, String message) {
 		System.out.println("Sending message: " + message + " to : " + channel);
-		try {
-			// Write the message to the output stream.
-			output.write(Util.toBytes("PRIVMSG " + channel + " :" + message + "\r\n"));
-			output.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+		messages.add("PRIVMSG " + channel + " :" + message);
 		return true;
 	}
 
@@ -227,7 +210,7 @@ public final class ServerConnection extends Thread {
 	 * Sends a whisper to a user. Adds the user and message to two array lists,
 	 * and the whisperThrottler thread handles the actual sending of the
 	 * messages, since they need to be throttled.
-	 * 
+	 *
 	 * @param user
 	 *            user to send the whisper to.
 	 * @param message
@@ -237,8 +220,7 @@ public final class ServerConnection extends Thread {
 	 *         there was an issue)
 	 */
 	public synchronized boolean sendWhisper(String user, String message) {
-		users.add(user);
-		messages.add(message);
+		sendMessage(TwitchBot.DEFAULT_CHANNELS[0], "/w " + user + " " + message);
 		return true;
 	}
 

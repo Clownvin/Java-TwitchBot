@@ -6,23 +6,27 @@ import com.clown.bot.messaging.commands.CommandHandler;
 import com.clown.bot.regex.BotRegex;
 import com.clown.bot.server.ServerConnection;
 import com.clown.bot.user.User;
+import com.clown.io.BasicIO;
 import com.clown.util.Util;
 
+import org.json.JSONObject;
+
 /**
- * 
+ *
  * @author Calvin A non-instantiable type that handles <code>Message</code>
  *         objects.
  */
 public final class MessageHandler {
 	private static String videoLink = "Not currently set";
+	private static String lastFollower = "Not currently set";
 	// Mabye you do something like every new person has to register first like
 	// !chatter and only if he has used !chatter he can chat, way better then
 	// "a" infront of everything
 	private static boolean registeredOnly = false;
-	
+
 	private static final ArrayList<String> autoMessages = new ArrayList<String>();
 	private static int counter = 0;
-	
+
 	/**
 	 * Sends a message from the AUTO_MESSAGE list every 5 minutes. Also adds
 	 * clown points to currently logged in users.
@@ -49,16 +53,39 @@ public final class MessageHandler {
 			}
 		}
 	};
-	
-	
+
+
 	//Messages should be delayed such that all messages are sent 6 times per hour (once every 10 minutes)
 	static {
 		AUTO_MESSAGE_THREAD.start();
 		autoMessages.add("Want to know more about what he's doing? Just ask.");
 		autoMessages.add("You can do !commands to get a list of commands.");
 		autoMessages.add("Did you know: In this channel, you can play games with other users? !gameguide for details on how.");
+		checkForNewFollower();
 	}
-	
+
+	public static boolean checkForNewFollower() {
+		String jsonPage = null;
+		try {
+			jsonPage = BasicIO.readUrl("https://api.twitch.tv/kraken/channels/vavbro/follows?direction=DESC&limit=1");
+		} catch (Exception e) {
+			System.err.println("Exception reading channel userlist.");
+		}
+		if (jsonPage == null) {
+			System.out.println("JSON was null for channel");
+			return false;
+		}
+		String mostRecent = new JSONObject(jsonPage).getJSONArray("follows").getJSONObject(0).getJSONObject("user").getString("name");
+		if (lastFollower.equalsIgnoreCase("not currently set")) {
+			lastFollower = mostRecent;
+			return false;
+		} else if (!lastFollower.equalsIgnoreCase(mostRecent)) {
+			lastFollower = mostRecent;
+			return true;
+		}
+		return false;
+	}
+
 	public static void addAutoMessage(String autoMessage) {
 		autoMessages.add(autoMessage);
 	}
@@ -88,7 +115,7 @@ public final class MessageHandler {
 	/**
 	 * First step in processing a message object from
 	 * <code>ServerConnection</code> and the main entry point into this object.
-	 * 
+	 *
 	 * @param source
 	 *            <code>ServerConnection</code> source.
 	 * @param message
@@ -111,7 +138,7 @@ public final class MessageHandler {
 
 	/**
 	 * Handles whispers from a <code>ServerConnection</code>.
-	 * 
+	 *
 	 * @param source
 	 *            <code>ServerConnection</code> source.
 	 * @param message
@@ -129,7 +156,7 @@ public final class MessageHandler {
 	/**
 	 * Moderates messages based on the amount of character variation, or if it's
 	 * in all caps.
-	 * 
+	 *
 	 * @param source
 	 *            <code>ServerConnection</code> source.
 	 * @param message
