@@ -38,7 +38,7 @@ public final class PollHandler {
 
 	};
 
-	private static final long POLL_DURATION = 30000; // 30 seconds.
+	private static final long POLL_DURATION = 120000; // 2 mins.
 	private static volatile boolean pollActive = false;
 	private static volatile boolean gamePoll = false;
 	

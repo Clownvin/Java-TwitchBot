@@ -17,6 +17,7 @@ public final class RequestHandler {
 	 * A thread to cull expired requests from the request list.
 	 */
 	private static final Thread REQUEST_CULLER = new Thread() {
+		
 		@Override
 		public void run() {
 			while (!TwitchBot.killIssued()) {

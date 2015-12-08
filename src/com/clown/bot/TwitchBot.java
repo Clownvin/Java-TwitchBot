@@ -94,7 +94,7 @@ public final class TwitchBot {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		TwitchPlaysFrozenDepths.startPlay();
+		//TwitchPlaysFrozenDepths.startPlay();
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 
 			@Override
