@@ -48,6 +48,9 @@ public class ChatComponent extends Component {
 	int j = 0;
 	for (int i = end - minStarting >= 0 ? end - minStarting : 0; j < minStarting
 		&& i < channel.getMessages().size(); j++, i++) {
+	    if (channel.getMessages().get(i).user == null) {
+		continue;
+	    }
 	    g.setColor(Color.BLACK);
 	    g.drawString(channel.getMessages().get(i).user.getUsername(), 4, idx + 1);
 	    g.setColor(channel.getMessages().get(i).user.getColor());

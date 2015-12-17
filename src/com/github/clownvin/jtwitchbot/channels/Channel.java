@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.clown.io.BasicIO;
@@ -127,14 +128,17 @@ public final class Channel {
 	    System.out.println("JSON was null for channel");
 	    return false;
 	}
-	String mostRecent = new JSONObject(jsonPage).getJSONArray("follows").getJSONObject(0).getJSONObject("user")
-		.getString("name");
-	if (lastFollower.equalsIgnoreCase("not currently set")) {
-	    lastFollower = mostRecent;
-	    return false;
-	} else if (!lastFollower.equalsIgnoreCase(mostRecent)) {
-	    lastFollower = mostRecent;
-	    return true;
+	try {
+	    String mostRecent = new JSONObject(jsonPage).getJSONArray("follows").getJSONObject(0).getJSONObject("user")
+		    .getString("name");
+	    if (lastFollower.equalsIgnoreCase("not currently set")) {
+		lastFollower = mostRecent;
+		return false;
+	    } else if (!lastFollower.equalsIgnoreCase(mostRecent)) {
+		lastFollower = mostRecent;
+		return true;
+	    }
+	} catch (JSONException e) {
 	}
 	return false;
     }

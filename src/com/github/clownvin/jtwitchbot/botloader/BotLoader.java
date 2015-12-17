@@ -47,6 +47,7 @@ public final class BotLoader {
 		    for (String channel : channels) {
 			bot.getChannelManager().joinChannel(channel);
 		    }
+		    channels.clear();
 		    bots.add(bot);
 		}
 	    }

@@ -10,6 +10,15 @@ import com.github.clownvin.jtwitchbot.connection.ServerConnection;
 import com.github.clownvin.jtwitchbot.gui.BotGUIFrame;
 import com.github.clownvin.jtwitchbot.messaging.MessageHandler;
 
+/**
+ * 
+ * @author Calvin Gene Hall
+ * 
+ *         This class houses all the members for each individual bot. From this
+ *         object, you can get any information about the bot represented by this
+ *         object.
+ *
+ */
 public final class TwitchBot {
     private final TwitchAccount botAccount;
     private final ServerConnection ircConnection;
@@ -58,7 +67,7 @@ public final class TwitchBot {
     public void logout() {
 	logOut = true;
 	for (Channel channel : channelManager.getChannels()) {
-		channel.sendMessage("Goodbye!");
+	    channel.sendMessage("Goodbye!");
 	}
     }
 }
