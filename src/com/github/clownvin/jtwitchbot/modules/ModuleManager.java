@@ -45,6 +45,9 @@ public final class ModuleManager {
 					}
 				}
 			}
+			for (Module module : moduleList) {
+				module.onLoad();
+			}
 		}
 	}
 	

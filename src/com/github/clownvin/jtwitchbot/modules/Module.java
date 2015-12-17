@@ -10,6 +10,8 @@ public abstract class Module implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -2275792831269941533L;
+	
+	public abstract void onLoad();
 
 	public abstract boolean onMessage(Message message);
 	
