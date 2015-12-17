@@ -7,20 +7,19 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class ModerateOn extends Command {
 
-	public ModerateOn(String word, String info) {
-		super(word, info);
-	}
+    public ModerateOn(String word, String info) {
+	super(word, info);
+    }
 
-	@Override
-	public UserType getUserType() {
-		return UserType.MODERATOR;
-	}
+    @Override
+    public UserType getUserType() {
+	return UserType.MODERATOR;
+    }
 
-	@Override
-	public void handleCommand(User user, String[] args, String message) {
-		user.getBot().getChannelManager().getChannel(user.getChannel()).setModerateOn(true);
-		user.sendWhisper(
-				BotRegex.getAffirmatives()[(int) (Math.random() * BotRegex.getAffirmatives().length)]);
-	}
+    @Override
+    public void handleCommand(User user, String[] args, String message) {
+	user.getBot().getChannelManager().getChannel(user.getChannel()).setModerateOn(true);
+	user.sendWhisper(BotRegex.getAffirmatives()[(int) (Math.random() * BotRegex.getAffirmatives().length)]);
+    }
 
 }

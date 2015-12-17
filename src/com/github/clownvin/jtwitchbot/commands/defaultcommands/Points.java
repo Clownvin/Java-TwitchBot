@@ -6,19 +6,19 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class Points extends Command {
 
-	public Points(String word, String info) {
-		super(word, info);
-	}
+    public Points(String word, String info) {
+	super(word, info);
+    }
 
-	@Override
-	public UserType getUserType() {
-		return UserType.VIEWER;
-	}
+    @Override
+    public UserType getUserType() {
+	return UserType.VIEWER;
+    }
 
-	@Override
-	public void handleCommand(User user, String[] args, String message) {
-		user.getBot().getIrcConnection().sendMessage(user.getChannel(), "@" + user.getUsername()
-				+ " You currently have " + user.getUserData().getPoints() + " clown points.");
-	}
+    @Override
+    public void handleCommand(User user, String[] args, String message) {
+	user.getBot().getIrcConnection().sendMessage(user.getChannel(),
+		"@" + user.getUsername() + " You currently have " + user.getUserData().getPoints() + " clown points.");
+    }
 
 }

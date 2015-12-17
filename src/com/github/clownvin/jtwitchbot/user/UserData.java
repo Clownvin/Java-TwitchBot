@@ -9,87 +9,89 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public final class UserData implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 368427517719929473L;
-	private int karma = 0;
-	private int points = 0;
-	private transient final User user;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 368427517719929473L;
 
-	private boolean registered = false;
-
-	private UserData(final User user, int karma, int points, boolean registered) {
-		this.user = user;
-		this.karma = karma;
-		this.points = points;
-		this.registered = registered;
+    public static UserData loadUserData(final User user) {
+	File userFile = new File("./data/users/" + user + ".ser");
+	File userDirectory = new File("./data/users/");
+	if (!userDirectory.exists()) {
+	    userDirectory.mkdirs();
+	    return new UserData(user, 0, 0, false);
 	}
-
-	public int getKarma() {
-		return karma;
+	if (!userFile.exists()) {
+	    UserData data = new UserData(user, 0, 0, false);
+	    data.saveData();
+	    return data;
 	}
-
-	public int getPoints() {
-		return points;
+	try {
+	    ObjectInputStream in = new ObjectInputStream(new FileInputStream(userFile));
+	    UserData userData = (UserData) in.readObject();
+	    in.close();
+	    return new UserData(user, userData.karma, userData.points, userData.registered);
+	} catch (IOException | ClassNotFoundException e) {
+	    e.printStackTrace();
+	    user.getBot().getGroupConnection().sendWhisper(user, "There was an exception while loading your file. :(");
+	    return new UserData(user, 0, 0, false);
 	}
+    }
 
-	public void register() {
-		registered = true;
-		saveData();
-	}
+    private int karma = 0;
+    private int points = 0;
 
-	public boolean isRegistered() {
-		return registered;
-	}
+    private transient final User user;
 
-	public void addKarma(int karma) {
-		this.karma += karma;
-		saveData();
-	}
+    private boolean registered = false;
 
-	public void addPoints(int points) {
-		this.points += points;
-		saveData();
-	}
+    private UserData(final User user, int karma, int points, boolean registered) {
+	this.user = user;
+	this.karma = karma;
+	this.points = points;
+	this.registered = registered;
+    }
 
-	public void saveData() {
-		File userFile = new File("./data/users/" + user + ".ser");
-		File userDirectory = new File("./data/users/");
-		if (!userDirectory.exists()) {
-			userDirectory.mkdirs();
-		}
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(userFile));
-			out.writeObject(this);
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			user.getBot().getGroupConnection().sendWhisper(user, "There was an exception while saving your file. :(");
-		}
-	}
+    public void addKarma(int karma) {
+	this.karma += karma;
+	saveData();
+    }
 
-	public static UserData loadUserData(final User user) {
-		File userFile = new File("./data/users/" + user + ".ser");
-		File userDirectory = new File("./data/users/");
-		if (!userDirectory.exists()) {
-			userDirectory.mkdirs();
-			return new UserData(user, 0, 0, false);
-		}
-		if (!userFile.exists()) {
-			UserData data = new UserData(user, 0, 0, false);
-			data.saveData();
-			return data;
-		}
-		try {
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(userFile));
-			UserData userData = (UserData) in.readObject();
-			in.close();
-			return new UserData(user, userData.karma, userData.points, userData.registered);
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-			user.getBot().getGroupConnection().sendWhisper(user, "There was an exception while loading your file. :(");
-			return new UserData(user, 0, 0, false);
-		}
+    public void addPoints(int points) {
+	this.points += points;
+	saveData();
+    }
+
+    public int getKarma() {
+	return karma;
+    }
+
+    public int getPoints() {
+	return points;
+    }
+
+    public boolean isRegistered() {
+	return registered;
+    }
+
+    public void register() {
+	registered = true;
+	saveData();
+    }
+
+    public void saveData() {
+	File userFile = new File("./data/users/" + user + ".ser");
+	File userDirectory = new File("./data/users/");
+	if (!userDirectory.exists()) {
+	    userDirectory.mkdirs();
 	}
+	try {
+	    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(userFile));
+	    out.writeObject(this);
+	    out.close();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    user.getBot().getGroupConnection().sendWhisper(user, "There was an exception while saving your file. :(");
+	}
+    }
 }
