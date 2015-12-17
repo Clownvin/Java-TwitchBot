@@ -13,6 +13,7 @@ import com.github.clownvin.jtwitchbot.commands.Command;
 import com.github.clownvin.jtwitchbot.commands.CommandHandler;
 import com.github.clownvin.jtwitchbot.commands.defaultcommands.*;
 import com.github.clownvin.jtwitchbot.messaging.polling.PollHandler;
+import com.github.clownvin.jtwitchbot.modules.ModuleManager;
 import com.github.clownvin.jtwitchbot.user.User;
 import com.github.clownvin.jtwitchbot.user.UserType;
 
@@ -217,13 +218,14 @@ public final class Channel {
 				parsedUsers.get(i).loadUserData();
 				System.out.println("User joined [" + channel + "]: " + parsedUsers.get(i).getUsername()+" of type "+parsedUsers.get(i).getType());
 				viewerList.add(parsedUsers.get(i));
+				ModuleManager.onJoin(parsedUsers.get(i));
 			}
 		}
 		for (int i = 0; i < viewerList.size(); i++) {
 			if (!parsedUsers.contains(viewerList.get(i))) {
 				viewerList.get(i).save();
 				System.out.println("User left [" + channel + "]: " + viewerList.get(i).getUsername());
-				viewerList.remove(i);
+				ModuleManager.onLeave(viewerList.remove(i));
 			}
 		}
 		if (checkForNewFollower()) {

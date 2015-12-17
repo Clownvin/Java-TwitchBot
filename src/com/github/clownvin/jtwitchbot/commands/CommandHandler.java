@@ -2,6 +2,7 @@ package com.github.clownvin.jtwitchbot.commands;
 
 import com.github.clownvin.jtwitchbot.connection.Channel;
 import com.github.clownvin.jtwitchbot.messaging.Message;
+import com.github.clownvin.jtwitchbot.modules.ModuleManager;
 import com.github.clownvin.jtwitchbot.user.User;
 import com.github.clownvin.jtwitchbot.user.UserType;
 
@@ -64,5 +65,6 @@ public final class CommandHandler {
 				return;
 			}
 		}
+		ModuleManager.onCommand(message.user, command, args);
 	}
 }

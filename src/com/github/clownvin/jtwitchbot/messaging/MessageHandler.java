@@ -2,6 +2,7 @@ package com.github.clownvin.jtwitchbot.messaging;
 
 import com.clown.util.Util;
 import com.github.clownvin.jtwitchbot.bot.TwitchBot;
+import com.github.clownvin.jtwitchbot.modules.ModuleManager;
 
 /**
  *
@@ -39,7 +40,7 @@ public final class MessageHandler {
 			bot.getChannelManager().getChannel(message.channel).getCommandHandler().handleCommand(message, false);
 			return;
 		}
-		//BotRegex.handleRegex(source, message);
+		ModuleManager.onMessage(message);
 	}
 
 	/**
@@ -56,6 +57,7 @@ public final class MessageHandler {
 			bot.getChannelManager().getChannel(message.channel).getCommandHandler().handleCommand(message, true);
 			return;
 		}
+		ModuleManager.onWhisper(message);
 	}
 
 	/**
