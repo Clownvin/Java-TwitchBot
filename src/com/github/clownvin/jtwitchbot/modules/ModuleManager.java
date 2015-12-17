@@ -2,8 +2,10 @@ package com.github.clownvin.jtwitchbot.modules;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,17 @@ public final class ModuleManager {
 
     // Static block loads modules from the module directory.
     static {
+	//moduleList.add(new TicTacToeModule());
 	File moduleFolder = new File(MODULE_DIRECTORY);
+	for (Module module : moduleList) {
+	    try {
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(MODULE_DIRECTORY+module.getModuleName()+".ser"));
+		out.writeObject(module);
+		out.close();
+	    } catch (IOException e ){
+		e.printStackTrace();
+	    }
+	}
 	if (!moduleFolder.exists() || !moduleFolder.isDirectory()) {
 	    System.out.println("Cannot load modules from a directory that doesn't exist, or is a regular file.");
 	    System.out.println(
@@ -31,6 +43,7 @@ public final class ModuleManager {
 		    in = new ObjectInputStream(new FileInputStream(module));
 		    moduleList.add((Module) in.readObject());
 		    in.close();
+		    System.out.println("Loaded module "+moduleList.get(moduleList.size() - 1).getModuleName());
 		} catch (IOException e) {
 		    e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -90,5 +103,9 @@ public final class ModuleManager {
 		return;
 	    }
 	}
+    }
+    
+    public static List<Module> getModuleList() {
+	return moduleList;
     }
 }

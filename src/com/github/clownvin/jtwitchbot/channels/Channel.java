@@ -24,6 +24,7 @@ import com.github.clownvin.jtwitchbot.commands.defaultcommands.RegistOn;
 import com.github.clownvin.jtwitchbot.commands.defaultcommands.SendMessage;
 import com.github.clownvin.jtwitchbot.messaging.Message;
 import com.github.clownvin.jtwitchbot.messaging.polling.PollHandler;
+import com.github.clownvin.jtwitchbot.modules.Module;
 import com.github.clownvin.jtwitchbot.modules.ModuleManager;
 import com.github.clownvin.jtwitchbot.user.User;
 import com.github.clownvin.jtwitchbot.user.UserType;
@@ -93,6 +94,11 @@ public final class Channel {
 	commands.add(new RegistOn("!registon", "Use this command to turn registered only mode on. Usage: !registon"));
 	commands.add(new SendMessage("!sendmessage",
 		"Use this command to send messages through the bot. Usage: !sendmessage <dest> <message>"));
+	for (Module module : ModuleManager.getModuleList()) {
+	    for (Command command : module.getModuleCommands()) {
+		commands.add(command);
+	    }
+	}
 	this.channel = channel;
 	this.bot = bot;
 	autoMessageThread.start();

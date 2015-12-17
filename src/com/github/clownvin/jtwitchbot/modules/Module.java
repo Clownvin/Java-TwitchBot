@@ -2,6 +2,7 @@ package com.github.clownvin.jtwitchbot.modules;
 
 import java.io.Serializable;
 
+import com.github.clownvin.jtwitchbot.commands.Command;
 import com.github.clownvin.jtwitchbot.messaging.Message;
 import com.github.clownvin.jtwitchbot.user.User;
 
@@ -22,4 +23,8 @@ public abstract class Module implements Serializable {
     public abstract boolean onMessage(Message message);
 
     public abstract boolean onWhisper(Message message);
+    
+    public abstract String getModuleName();
+    
+    public abstract Command[] getModuleCommands();
 }

@@ -7,6 +7,11 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class AddAutoMessage extends Command {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7452516977624210173L;
+
     public AddAutoMessage(String word, String info) {
 	super(word, info);
     }

@@ -6,6 +6,11 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class Points extends Command {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3988325522633529468L;
+
     public Points(String word, String info) {
 	super(word, info);
     }

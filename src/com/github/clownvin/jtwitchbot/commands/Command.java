@@ -1,10 +1,16 @@
 package com.github.clownvin.jtwitchbot.commands;
 
+import java.io.Serializable;
+
 import com.github.clownvin.jtwitchbot.regex.Word;
 import com.github.clownvin.jtwitchbot.user.User;
 import com.github.clownvin.jtwitchbot.user.UserType;
 
-public abstract class Command extends Word {
+public abstract class Command extends Word implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6343781712892299182L;
     protected final String info;
 
     public Command(String word, String info) {

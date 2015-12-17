@@ -6,6 +6,11 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class RegistOff extends Command {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -471873718108830825L;
+
     public RegistOff(String word, String info) {
 	super(word, info);
     }

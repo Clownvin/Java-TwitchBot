@@ -7,6 +7,11 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class ModerateOff extends Command {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5555805442866013595L;
+
     public ModerateOff(String word, String info) {
 	super(word, info);
     }

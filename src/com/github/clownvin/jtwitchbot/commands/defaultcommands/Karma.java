@@ -6,6 +6,11 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class Karma extends Command {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4873931867005826116L;
+
     public Karma(String word, String info) {
 	super(word, info);
     }

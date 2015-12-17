@@ -7,8 +7,14 @@ import com.github.clownvin.jtwitchbot.user.User;
 import com.github.clownvin.jtwitchbot.user.UserType;
 
 public final class CommandHandler {
+    private static final long COMMAND_DELAY = 3000; // 3 seconds.
     private static final Command REGISTER = new Command("!register",
 	    "Registers you. You MUST whisper this command to me. Usage: /w <my_username> !register") {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5909827219489628201L;
 
 	@Override
 	public UserType getUserType() {
@@ -51,6 +57,10 @@ public final class CommandHandler {
 	    channel.getBot().getChannelManager().forceRefresh();
 	    return;
 	}
+	if (!message.user.commandDelayPassed()) {
+	    return;
+	}
+	message.user.setCommandDelay(COMMAND_DELAY);
 	if (whisper && REGISTER.matches(command)) {
 	    REGISTER.handleCommand(message.user, args, preSplit);
 	    return;

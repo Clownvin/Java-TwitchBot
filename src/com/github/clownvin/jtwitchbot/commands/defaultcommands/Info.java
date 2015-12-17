@@ -7,6 +7,11 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class Info extends Command {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4275725976322256803L;
+
     public Info(String word, String info) {
 	super(word, info);
     }

@@ -9,6 +9,11 @@ import com.github.clownvin.jtwitchbot.user.UserType;
 
 public class Commands extends Command {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8511859053362982865L;
+
     public Commands(String word, String info) {
 	super(word, info);
     }
