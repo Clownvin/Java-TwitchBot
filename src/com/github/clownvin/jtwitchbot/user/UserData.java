@@ -54,7 +54,7 @@ public final class UserData implements Serializable {
 	}
 
 	public void saveData() {
-		File userFile = new File("./data/users/" + user + ".txt");
+		File userFile = new File("./data/users/" + user + ".ser");
 		File userDirectory = new File("./data/users/");
 		if (!userDirectory.exists()) {
 			userDirectory.mkdirs();
@@ -70,7 +70,7 @@ public final class UserData implements Serializable {
 	}
 
 	public static UserData loadUserData(final User user) {
-		File userFile = new File("./data/users/" + user + ".txt");
+		File userFile = new File("./data/users/" + user + ".ser");
 		File userDirectory = new File("./data/users/");
 		if (!userDirectory.exists()) {
 			userDirectory.mkdirs();

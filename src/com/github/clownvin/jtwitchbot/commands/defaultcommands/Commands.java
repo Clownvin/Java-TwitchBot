@@ -24,13 +24,16 @@ public class Commands extends Command {
 		String currentList = "Commands: ";
 		int messageLength = 400;
 		for (Command c : user.getBot().getChannelManager().getChannel(user.getChannel()).getCommands()) {
+			if (!c.hasAccess(user)) {
+				continue;
+			}
 			currentList += c.getWord() + ", ";
 			if (currentList.length() > messageLength) {
 				commandLists.add(currentList);
 				currentList = "Commands cont: ";
 			}
 		}
-		if (currentList.length() > 18) {
+		if (currentList.length() > 15) {
 			commandLists.add(currentList);
 		}
 		user.sendWhisper("Use !info <command> to get more information.");

@@ -2,6 +2,8 @@ package com.github.clownvin.jtwitchbot.user;
 
 import com.github.clownvin.jtwitchbot.bot.TwitchBot;
 
+import java.awt.*;
+
 /**
  * 
  * @author Calvin A basic container type containing information about a user.
@@ -10,11 +12,11 @@ public final class User {
 	private final String username;
 	private final String channel;
 	private final UserType type;
-	private long requestDelay;
 	private long commandDelay;
 	private UserData userData = null;
 	private int banWarning = 0;
 	private final TwitchBot bot;
+	private final Color color;
 
 	public void addWarning() {
 		banWarning++;
@@ -44,8 +46,8 @@ public final class User {
 		this.channel = channel;
 		this.bot = bot;
 		this.type = type;
-		this.requestDelay = System.currentTimeMillis();
 		this.commandDelay = System.currentTimeMillis();
+		this.color = new Color((int) (0xFF * Math.random()), (int) (0xFF * Math.random()), (int) (0xFF * Math.random()));
 	}
 
 	/*
@@ -80,13 +82,8 @@ public final class User {
 		return channel;
 	}
 
-	/**
-	 * Checks whether the delay has passed.
-	 * 
-	 * @return true if the delay has passed, false if it hasn't.
-	 */
-	public boolean requestDelayPassed() {
-		return System.currentTimeMillis() - requestDelay > 0;
+	public Color getColor() {
+		return color;
 	}
 
 	/**
@@ -97,16 +94,6 @@ public final class User {
 	 */
 	public void setCommandDelay(long delay) {
 		this.commandDelay = System.currentTimeMillis() + delay;
-	}
-
-	/**
-	 * Sets the request delay.
-	 * 
-	 * @param delay
-	 *            delay in milliseconds.
-	 */
-	public void setRequestDelay(long delay) {
-		this.requestDelay = System.currentTimeMillis() + delay;
 	}
 
 	/**
@@ -149,5 +136,10 @@ public final class User {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return username;
 	}
 }

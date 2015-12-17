@@ -1,11 +1,14 @@
 package com.github.clownvin.jtwitchbot.bot;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.clownvin.jtwitchbot.Main;
 import com.github.clownvin.jtwitchbot.account.TwitchAccount;
-import com.github.clownvin.jtwitchbot.connection.ChannelManager;
+import com.github.clownvin.jtwitchbot.channels.ChannelManager;
 import com.github.clownvin.jtwitchbot.connection.ServerConnection;
+import com.github.clownvin.jtwitchbot.messaging.Message;
 import com.github.clownvin.jtwitchbot.messaging.MessageHandler;
 
 public final class TwitchBot {
@@ -14,6 +17,7 @@ public final class TwitchBot {
 	private final ServerConnection groupConnection;
 	private final ChannelManager channelManager = new ChannelManager(this);
 	private final MessageHandler messageHandler = new MessageHandler(this);
+	private final List<Message> messages = new ArrayList<Message>();
 	private volatile boolean logOut = false;
 	
 	public TwitchBot(final TwitchAccount botAccount) throws IOException {
@@ -45,5 +49,18 @@ public final class TwitchBot {
 	
 	public boolean isGoingDown() {
 		return logOut;
+	}
+
+	public void addMessage(Message message) {
+		messages.add(message);
+		if (messages.size() > 100) {
+			for (int i = 0; i < 10; i++) {
+				messages.remove(0);
+			}
+		}
+	}
+
+	public List<Message> getMessages() {
+		return messages;
 	}
 }

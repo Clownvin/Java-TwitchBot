@@ -24,8 +24,6 @@ public final class MessageHandler {
 	 * First step in processing a message object from
 	 * <code>ServerConnection</code> and the main entry point into this object.
 	 *
-	 * @param source
-	 *            <code>ServerConnection</code> source.
 	 * @param message
 	 *            <code>Message</code> container object.
 	 */
@@ -36,6 +34,7 @@ public final class MessageHandler {
 		}
 		System.out.println(
 				"[" + message.channel.replace("#", "") + "] " + message.user + ": \"" + message.message + "\"");
+		bot.addMessage(message);
 		if (message.message.startsWith("!")) {
 			bot.getChannelManager().getChannel(message.channel).getCommandHandler().handleCommand(message, false);
 			return;
@@ -46,8 +45,6 @@ public final class MessageHandler {
 	/**
 	 * Handles whispers from a <code>ServerConnection</code>.
 	 *
-	 * @param source
-	 *            <code>ServerConnection</code> source.
 	 * @param message
 	 *            <code>Message</code> container object.
 	 */
@@ -57,6 +54,7 @@ public final class MessageHandler {
 			bot.getChannelManager().getChannel(message.channel).getCommandHandler().handleCommand(message, true);
 			return;
 		}
+		bot.addMessage(new Message(message.user, "Whisper", message.message));
 		ModuleManager.onWhisper(message);
 	}
 
@@ -64,8 +62,6 @@ public final class MessageHandler {
 	 * Moderates messages based on the amount of character variation, or if it's
 	 * in all caps.
 	 *
-	 * @param source
-	 *            <code>ServerConnection</code> source.
 	 * @param message
 	 *            <code>Message</code> container object.
 	 */
@@ -86,7 +82,7 @@ public final class MessageHandler {
 			int sim = 0;
 			for (int i = 0; i < chars.length; i++) {
 				for (int j = 0; j < chars.length; j++) {
-					if (chars[i] == chars[j]) {
+					if (chars[i] == chars[j] && j != i) {
 						sim++;
 					}
 				}

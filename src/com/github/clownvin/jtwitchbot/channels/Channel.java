@@ -1,5 +1,6 @@
-package com.github.clownvin.jtwitchbot.connection;
+package com.github.clownvin.jtwitchbot.channels;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,16 +25,17 @@ import com.github.clownvin.jtwitchbot.user.UserType;
  */
 public final class Channel {
 	private final String channel;
-	private final List<User> viewerList = new ArrayList<User>();
+	private final List<User> viewerList = new ArrayList<>();
 	private final TwitchBot bot;
 	private String lastFollower = "Not currently set";
-	private final List<String> autoMessages = new ArrayList<String>();
-	private final List<Command> commands = new ArrayList<Command>(); 
+	private final List<String> autoMessages = new ArrayList<>();
+	private final List<Command> commands = new ArrayList<>();
 	private int counter = 0;
 	private boolean registeredOnly = false;
 	private boolean moderateOn = true;
 	private PollHandler pollHandler = new PollHandler(this);
 	private CommandHandler commandHandler = new CommandHandler(this);
+	private final Color color;
 	
 	private final Thread autoMessageThread = new Thread() {
 		@Override
@@ -53,6 +55,10 @@ public final class Channel {
 			}
 		}
 	};
+
+	public Color getColor() {
+		return color;
+	}
 	
 	public List<Command> getCommands() {
 		return commands;
@@ -134,6 +140,7 @@ public final class Channel {
 		commands.add(new SendMessage("!sendmessage", "Use this command to send messages through the bot. Usage: !sendmessage <dest> <message>"));
 		this.channel = channel;
 		this.bot = bot;
+		this.color = new Color((int) (0xFF * Math.random()), (int) (0xFF * Math.random()), (int) (0xFF * Math.random()));
 		autoMessageThread.start();
 	}
 	
@@ -216,15 +223,19 @@ public final class Channel {
 		for (int i = 0; i < parsedUsers.size(); i++) {
 			if (!viewerList.contains(parsedUsers.get(i))) {
 				parsedUsers.get(i).loadUserData();
-				System.out.println("User joined [" + channel + "]: " + parsedUsers.get(i).getUsername()+" of type "+parsedUsers.get(i).getType());
+				System.out.println("User joined [" + channel + "]: " + parsedUsers.get(i)+" of type "+parsedUsers.get(i).getType());
 				viewerList.add(parsedUsers.get(i));
 				ModuleManager.onJoin(parsedUsers.get(i));
+			} else if (viewerList.get(viewerList.indexOf(parsedUsers.get(i))).getType() != parsedUsers.get(i).getType()) {
+				viewerList.remove(viewerList.indexOf(parsedUsers.get(i)));
+				viewerList.add(parsedUsers.get(i));
+				System.out.println("User "+parsedUsers.get(i)+" in ["+channel+"] changed to type "+parsedUsers.get(i).getType());
 			}
 		}
 		for (int i = 0; i < viewerList.size(); i++) {
 			if (!parsedUsers.contains(viewerList.get(i))) {
 				viewerList.get(i).save();
-				System.out.println("User left [" + channel + "]: " + viewerList.get(i).getUsername());
+				System.out.println("User left [" + channel + "]: " + viewerList.get(i));
 				ModuleManager.onLeave(viewerList.remove(i));
 			}
 		}

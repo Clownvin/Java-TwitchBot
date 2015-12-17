@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="ClownLib.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/deps/ClownLib.jar!/"/>
+	</lib>
+	<lib name="json-20151123.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/deps/json-20151123.jar!/"/>
+	</lib>
+</component>

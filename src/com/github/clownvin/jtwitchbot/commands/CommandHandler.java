@@ -1,6 +1,6 @@
 package com.github.clownvin.jtwitchbot.commands;
 
-import com.github.clownvin.jtwitchbot.connection.Channel;
+import com.github.clownvin.jtwitchbot.channels.Channel;
 import com.github.clownvin.jtwitchbot.messaging.Message;
 import com.github.clownvin.jtwitchbot.modules.ModuleManager;
 import com.github.clownvin.jtwitchbot.user.User;
@@ -51,10 +51,6 @@ public final class CommandHandler {
 			channel.getBot().getChannelManager().forceRefresh();
 			return;
 		}
-		if (message.user.getType() == null) {
-			System.out.println("That's not supposed to happen!");
-		}
-		System.out.println("Command: " + command + ", arglength: " + args.length);
 		if (whisper && REGISTER.matches(command)) {
 			REGISTER.handleCommand(message.user, args, preSplit);
 			return;

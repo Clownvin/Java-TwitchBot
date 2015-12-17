@@ -2,7 +2,7 @@ package com.github.clownvin.jtwitchbot;
 
 import com.github.clownvin.jtwitchbot.bot.TwitchBot;
 import com.github.clownvin.jtwitchbot.botloader.BotLoader;
-import com.github.clownvin.jtwitchbot.connection.Channel;
+import com.github.clownvin.jtwitchbot.channels.Channel;
 import com.github.clownvin.jtwitchbot.connection.ServerInfo;
 
 public final class Main {

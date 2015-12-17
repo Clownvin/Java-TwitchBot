@@ -1,7 +1,7 @@
 package com.github.clownvin.jtwitchbot.commands.defaultcommands;
 
 import com.github.clownvin.jtwitchbot.commands.Command;
-import com.github.clownvin.jtwitchbot.connection.Channel;
+import com.github.clownvin.jtwitchbot.channels.Channel;
 import com.github.clownvin.jtwitchbot.user.User;
 import com.github.clownvin.jtwitchbot.user.UserType;
 

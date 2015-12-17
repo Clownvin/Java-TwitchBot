@@ -1,4 +1,4 @@
-package com.github.clownvin.jtwitchbot.connection;
+package com.github.clownvin.jtwitchbot.channels;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class ChannelManager {
 					channel.updateViewerList();
 				}
 				try {
-					Thread.sleep(300); // 5 seconds.
+					Thread.sleep(300);
 				} catch (InterruptedException e) {
 				}
 			}

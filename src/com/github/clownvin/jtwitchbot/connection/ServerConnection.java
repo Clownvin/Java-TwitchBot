@@ -49,6 +49,7 @@ public final class ServerConnection extends Thread {
 					output.flush();
 				} catch (IOException e) {
 					e.printStackTrace();
+					System.out.println("Output is closed: "+socket.isOutputShutdown());
 				}
 			}
 		}
@@ -57,10 +58,6 @@ public final class ServerConnection extends Thread {
 	/**
 	 * Constructor for a new instance of server connection.
 	 *
-	 * @param ip
-	 *            IP of the server to connect to.
-	 * @param port
-	 *            port of the server to connect to.
 	 * @throws IOException
 	 *             if an IOException is thrown while creating socket, output, or
 	 *             input, throw it to the caller since this object is basically

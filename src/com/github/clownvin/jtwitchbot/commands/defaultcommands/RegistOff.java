@@ -19,7 +19,7 @@ public class RegistOff extends Command {
 	public void handleCommand(User user, String[] args, String message) {
 		user.getBot().getChannelManager().getChannel(user.getChannel()).setRegisteredOnly(false);
 		user.getBot().getIrcConnection().sendMessage(user.getChannel(),
-				"Register-only chat is now off. Have a nice day.");
+				"Register-only chat is now off. Have a nice day. Kappa");
 	}
 
 }
