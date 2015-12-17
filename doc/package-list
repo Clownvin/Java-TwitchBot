@@ -1,1 +1,14 @@
-com.clown.bot
+com.github.clownvin.jtwitchbot
+com.github.clownvin.jtwitchbot.account
+com.github.clownvin.jtwitchbot.bot
+com.github.clownvin.jtwitchbot.botloader
+com.github.clownvin.jtwitchbot.channels
+com.github.clownvin.jtwitchbot.commands
+com.github.clownvin.jtwitchbot.commands.defaultcommands
+com.github.clownvin.jtwitchbot.connection
+com.github.clownvin.jtwitchbot.gui
+com.github.clownvin.jtwitchbot.messaging
+com.github.clownvin.jtwitchbot.messaging.polling
+com.github.clownvin.jtwitchbot.modules
+com.github.clownvin.jtwitchbot.regex
+com.github.clownvin.jtwitchbot.user
