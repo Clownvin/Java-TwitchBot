@@ -17,8 +17,8 @@ public final class BotRegex {
     }
 
     public static float getPercentLikeness(String ori, String match) {
-	char[] oriChar = ori.toCharArray();
-	char[] matchChar = match.toCharArray();
+	char[] oriChar = ori.toLowerCase().toCharArray();
+	char[] matchChar = match.toLowerCase().toCharArray();
 	float val = 0.0f;
 	int oriOff = ori.indexOf(matchChar[0]);
 	if (oriOff == -1) {

@@ -18,7 +18,7 @@ public final class ModuleManager {
 
     // Static block loads modules from the module directory.
     static {
-	//moduleList.add(new TicTacToeModule());
+	//moduleList.add(new YoutubeRequestModule());
 	File moduleFolder = new File(MODULE_DIRECTORY);
 	for (Module module : moduleList) {
 	    try {

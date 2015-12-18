@@ -21,7 +21,7 @@ public class Word {
     }
 
     public boolean matches(String s) {
-	return regex.matcher(s).matches() || BotRegex.getPercentLikeness(word, s) > ((s.length() - 1.2f) / s.length());
+	return regex.matcher(s.toLowerCase()).matches() || BotRegex.getPercentLikeness(word, s) > ((s.length() - 1.2f) / s.length());
     }
 
     @Override

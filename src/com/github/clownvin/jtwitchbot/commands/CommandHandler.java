@@ -50,8 +50,8 @@ public final class CommandHandler {
      *            the <code>Message</code> container.
      */
     public void handleCommand(Message message, boolean whisper) {
-	String command = message.message.toLowerCase().split(" ")[0].trim();
-	String preSplit = message.message.toLowerCase().replace(command + "", "").trim();
+	String command = message.message.split(" ")[0].trim();
+	String preSplit = message.message.replace(command + "", "").trim();
 	String[] args = preSplit.length() > 0 ? preSplit.split(" ") : new String[0];
 	if (message.user == null) {
 	    channel.getBot().getChannelManager().forceRefresh();

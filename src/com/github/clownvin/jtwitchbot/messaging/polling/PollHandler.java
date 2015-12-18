@@ -18,6 +18,11 @@ public final class PollHandler {
 
     private final Command yayCommand = new Command("!yay", "Use this to cast a \"yay\" vote.") {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3286800095919623674L;
+
 	@Override
 	public UserType getUserType() {
 	    return UserType.VIEWER;
@@ -31,6 +36,11 @@ public final class PollHandler {
     };
 
     private final Command nayCommand = new Command("!nay", "Use this to cast a \"nay\" vote.") {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4008390967290830933L;
 
 	@Override
 	public UserType getUserType() {
@@ -148,6 +158,11 @@ public final class PollHandler {
 		    System.out.println("Command: " + command);
 		    if (command.length() > 0) {
 			tempCommands.add(new Command("!" + command, "Use this to cast a \"" + command + "\" vote.") {
+
+			    /**
+			     * 
+			     */
+			    private static final long serialVersionUID = 1935557930818465355L;
 
 			    @Override
 			    public UserType getUserType() {
